@@ -1,12 +1,28 @@
-#include <iostream>
-#include <fstream>
-#include <cstring>
-#include <ctime>
 #pragma once
 
-// Classe de base pour représenter une case du jeu
+// Création d'un type Point pour les coordonnées
+typedef struct {
+    int x;
+    int y;
+} Point;
+
 class Case {
+protected:
+    Point coordonnees;
+
 public:
-    virtual void action() const = 0;  // Fonction virtuelle
-    virtual ~Case() = default;  // Destructeur virtuel
+    // Constructeur par défaut
+    Case() : coordonnees({0, 0}) {}
+
+    // Constructeur avec des coordonnées spécifiques
+    Case(Point _coordonnees) : coordonnees(_coordonnees) {}
+
+    // Fonction virtuelle pure
+    virtual void action() const = 0;
+
+    // Getter pour les coordonnées
+    Point getCoordonnees() const { return coordonnees; }
+
+    // Destructeur virtuel
+    virtual ~Case() = default;
 };
