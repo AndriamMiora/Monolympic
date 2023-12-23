@@ -3,6 +3,10 @@
 #include <fstream>
 #include <cstring>
 #include <ctime>
+#include <vector>
+#include "case.hpp"
+#include "board.hpp"
+
 
 using namespace std;
 
@@ -213,6 +217,9 @@ if (gameStarted) {
     sf::RectangleShape board(sf::Vector2f(1280.0f, 720.0f));
     board.setTexture(&boardtexture);
 
+    //  Création du plateau de jeu
+    Board plateau;
+
     bool boardSelected = false;
     string playerBoard = "";
     while (!boardSelected && window.isOpen()) {
@@ -229,6 +236,14 @@ if (gameStarted) {
                 }
             }
         }
+        // Ajout de quelques cases
+        plateau.addCase(std::unique_ptr<Case>(new CaseDepart(5, Point{1, 1})));
+        plateau.addCase(std::unique_ptr<Case>(new CaseTaxe(10)));
+        plateau.addCase(std::unique_ptr<Case>(new CaseDepart(3, Point{2, 2})));
+        plateau.addCase(std::unique_ptr<Case>(new CaseTaxe(5)));
+
+        plateau.play();
+
 
         window.clear();
         window.draw(board);

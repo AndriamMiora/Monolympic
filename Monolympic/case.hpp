@@ -8,7 +8,8 @@ typedef struct {
 
 class Case {
 protected:
-    Point coordonnees;
+    // Position d'une carte qui est un int 
+    int 
 
 public:
     // Constructeur par défaut
