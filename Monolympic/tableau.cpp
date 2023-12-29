@@ -2,10 +2,6 @@
 #include <iostream>
 #include <vector>
 
-void afficherPosition(const std::string& nom, const sf::Vector2f& position) {
-    std::cout << "Position de la case " << nom << " : (" << position.x << ", " << position.y << ")" << std::endl;
-}
-
 int main() {
     // Charger l'image
     sf::Texture texture;
@@ -40,10 +36,10 @@ int main() {
 
     // Tableau pour stocker les positions des cases
     std::vector<sf::Vector2f> positions;
-
+    
     // Position de la case de départ à gauche en bas
     sf::Vector2f positionDepartGauche(310.0f, basImage + offsetY);
-    afficherPosition("DepartGaucheDown", positionDepartGauche);
+   
 
     // Ajouter la case de départ à gauche en bas au tableau
     positions.push_back(positionDepartGauche);
@@ -52,33 +48,35 @@ int main() {
     for (int i = 0; i < 9; ++i) {
         sf::Vector2f position(positionDepartGauche.x + caseDepartSize.x + (caseNormaleSize.x * i), positionDepartGauche.y);
         positions.push_back(position);
-        afficherPosition("NormaleDown" + std::to_string(i + 1), position);
+    
     }
 
     // Position de la case de départ à droite en bas
     sf::Vector2f positionDepartDroite(positions.back().x + caseNormaleSize.x, positionDepartGauche.y);
-    afficherPosition("DepartDroiteDown", positionDepartDroite);
+    //afficherPosition("DepartDroiteDown", positionDepartDroite);
 
     // Ajouter la case de départ à droite en bas au tableau
     positions.push_back(positionDepartDroite);
 
     // Calculer les positions des 9 nouvelles cases normales à gauche, au-dessus de la case "DepartGaucheDown"
     for (int i = 0; i < 9; ++i) {
+        // Décaler le début de la case vers la droite
         sf::Vector2f position(positionDepartGauche.x- caseNormaleRotateSize.x, positionDepartGauche.y - caseNormaleRotateSize.y * (i + 1));
+        // je veux deplacer la case vers la droite sans changer la taille de la case
         positions.push_back(position);
-        afficherPosition("NormaleRotateLeft" + std::to_string(i + 1), position);
+        //afficherPosition("NormaleRotateLeft" + std::to_string(i + 1), position);
     }
 
-    // Calculer les positions des 9 nouvelles cases normales à droite, au-dessus de la case "DepartDroiteDown"
+    // Calculer les positions des 9 nouvelles cases normales à d¢roite, au-dessus de la case "DepartDroiteDown"
     for (int i = 0; i < 9; ++i) {
         sf::Vector2f position(positionDepartDroite.x + caseNormaleRotateSize.x, positionDepartDroite.y - caseNormaleRotateSize.y * (i + 1));
         positions.push_back(position);
-        afficherPosition("NormaleRotateRight" + std::to_string(i + 1), position);
+        //afficherPosition("NormaleRotateRight" + std::to_string(i + 1), position);
     }
 
     // Calculer la position de départ en haut
     sf::Vector2f positionDepartGaucheTop(positionDepartGauche.x, hautImage + offsetYTop);
-    afficherPosition("DepartGaucheTop", positionDepartGaucheTop);
+   
 
     // Ajouter la case de départ à gauche en haut au tableau
     positions.push_back(positionDepartGaucheTop);
@@ -87,36 +85,19 @@ int main() {
     for (int i = 0; i < 9; ++i) {
         sf::Vector2f position(positionDepartGaucheTop.x + caseDepartSize.x + (caseNormaleSize.x * i), positionDepartGaucheTop.y);
         positions.push_back(position);
-        afficherPosition("NormaleTop" + std::to_string(i + 1), position);
+        
     }
 
     // Position de la case de départ à droite en haut
     sf::Vector2f positionDepartDroiteTop(positions.back().x + caseNormaleSize.x, positionDepartGaucheTop.y);
-    afficherPosition("DepartDroiteTop", positionDepartDroiteTop);
+   
 
     // Ajouter la case de départ à droite en haut au tableau
     positions.push_back(positionDepartDroiteTop);
 
-    // Couleurs des cases
-    sf::Color couleurCaseDepart(255, 0, 0); // Rouge
-    sf::Color couleurCaseNormale(0, 255, 0); // Vert
-    sf::Color couleurContour(0, 0, 0); // Noir
-    sf::Color couleurPoint(0, 0, 255); // Bleu pour les points
-
-    // Boucle principale de rendu
-    while (window.isOpen()) {
-        sf::Event event;
-        while (window.pollEvent(event)) {
-            if (event.type == sf::Event::Closed)
-                window.close();
-        }
-
-        // Effacer l'écran
-        window.clear();
-
-        // Dessiner le sprite
-        window.draw(sprite);
-
+        // Tableau pour stocker les positions des points
+        std::vector<sf::Vector2f> points;   
+    
         // Dessiner les cases avec des contours noirs et des points au centre
         for (size_t i = 0; i < positions.size(); ++i) {
             sf::RectangleShape caseShape;
@@ -125,42 +106,68 @@ int main() {
             caseShape.setPosition(positions[i]);
             if (positions[i] == positionDepartGauche || positions[i] == positionDepartDroite || positions[i] == positionDepartGaucheTop || positions[i] == positionDepartDroiteTop) {
                 caseShape.setSize(sf::Vector2f(caseDepartSize.x, caseDepartSize.y));
-                caseShape.setFillColor(couleurCaseDepart);
+          
             } else if (positions[i].x == positionDepartGauche.x - caseNormaleRotateSize.x) {
                 // Cas des nouvelles cases normales tournées à 90 degrés à gauche
+                // décaler le debut de la case vers la droite 
+                caseShape.setPosition(positions[i].x + caseNormaleRotateSize.x, positions[i].y);
                 caseShape.setSize(sf::Vector2f(caseNormaleRotateSize.x, caseNormaleRotateSize.y));
-                caseShape.setFillColor(couleurCaseNormale);
+            
             } else if (positions[i].x == positionDepartDroite.x + caseNormaleRotateSize.x) {
                 // Cas des nouvelles cases normales tournées à 90 degrés à droite
-                caseShape.setSize(sf::Vector2f(caseNormaleRotateSize.x, caseNormaleRotateSize.y));
-                caseShape.setFillColor(couleurCaseNormale);
+                caseShape.setSize(sf::Vector2f(-caseNormaleRotateSize.x, caseNormaleRotateSize.y));
+                
             } else {
                 // Cas des cases normales existantes
                 caseShape.setSize(sf::Vector2f(caseNormaleSize.x, caseNormaleSize.y));
-                caseShape.setFillColor(couleurCaseNormale);
+              
             }
-
-            // Dessiner la case
-            window.draw(caseShape);
-
-            // Dessiner le contour noir
-            sf::RectangleShape contourShape(caseShape.getSize() + sf::Vector2f(-contourThickness * 2, -contourThickness * 2));
-            contourShape.setPosition(caseShape.getPosition() + sf::Vector2f(contourThickness, contourThickness));
-            contourShape.setFillColor(sf::Color::Transparent);
-            contourShape.setOutlineThickness(contourThickness);
-            contourShape.setOutlineColor(couleurContour);
-
-            // Dessiner le contour
-            window.draw(contourShape);
 
             // Dessiner le point au centre de la case
             sf::CircleShape point(2.0f);
-            point.setFillColor(couleurPoint);
-            point.setPosition(positions[i] + sf::Vector2f(caseShape.getSize().x / 2.0f, caseShape.getSize().y / 2.0f));
+
+            if (positions[i].x != positionDepartGauche.x - caseNormaleRotateSize.x) {
+                point.setPosition(positions[i] + sf::Vector2f(caseShape.getSize().x / 2.0f, caseShape.getSize().y / 2.0f));
+                // recupérer les coordonnées du point
+                points.push_back(point.getPosition());
+                printf("Point : %zu (%f, %f)\n", i, point.getPosition().x, point.getPosition().y);
+            } else {
+                // décaler le point vers la droite
+                point.setPosition(positions[i] + sf::Vector2f(caseShape.getSize().x / 2.0f, caseShape.getSize().y / 2.0f));
+                point.move(caseNormaleRotateSize.x, 0.0f);
+                // recupérer les coordonnées du point
+                points.push_back(point.getPosition());
+                printf("Point : %zu (%f, %f)\n", i, point.getPosition().x, point.getPosition().y);
+            }
+            
+        }
+
+       while (window.isOpen()) {
+        // Gérer les événements
+        sf::Event event;
+        while (window.pollEvent(event)) {
+            // Fermer la fenêtre si l'utilisateur le souhaite
+            if (event.type == sf::Event::Closed) {
+                window.close();
+            }
+        }
+
+        // Effacer la fenêtre
+        window.clear(sf::Color::White);
+
+        // Dessiner le sprite
+        window.draw(sprite);
+
+        // desiner les points 
+        for (size_t i = 0; i < points.size(); ++i) {
+            sf::CircleShape point(2.0f);
+            point.setPosition(points[i]);
+            // changer la couleur du point
+            point.setFillColor(sf::Color::Red);
             window.draw(point);
         }
 
-        // Afficher le contenu
+        // Afficher le contenu de la fenêtre à l'écran
         window.display();
     }
 
