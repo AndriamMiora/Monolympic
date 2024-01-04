@@ -1,4 +1,3 @@
-// Pion.cpp
 #include "Pion.hpp"
 # include <iostream>
 
@@ -12,7 +11,7 @@ Pion::Pion(const std::string& cheminImage, sf::Vector2f position) {
     sprite.setTexture(texture);
 
     // Redimensionner le sprite (ajuster ces valeurs selon vos besoins)
-    float facteurRedimensionnement = 0.07f; // Exemple : réduire la taille de moitié
+    float facteurRedimensionnement = 0.05f; // Exemple : réduire la taille de moitié
     sprite.setScale(facteurRedimensionnement, facteurRedimensionnement);
 
     sprite.setPosition(position);
