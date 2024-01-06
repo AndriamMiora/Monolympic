@@ -33,7 +33,7 @@ int main(){
     // Pour charger une image de fond
     sf::RectangleShape introScreen(sf::Vector2f(1280.0f, 720.0f));
     sf::Texture introScreenTexture;
-    introScreenTexture.loadFromFile("font.jpeg");
+    introScreenTexture.loadFromFile("large.png");
     introScreen.setTexture(&introScreenTexture);
 
     // Pour afficher du texte
@@ -42,8 +42,8 @@ int main(){
     introScreenText.setCharacterSize(50);
     introScreenText.setPosition(sf::Vector2f(50.0f, 600.0f));
     // Position du texte en bas à gauche de la fenêtre
-    introScreenText.setFillColor(sf::Color::White);
-    introScreenText.setString("MONOLYMPIC GAMES");
+    //introScreenText.setFillColor(sf::Color::White);
+    //introScreenText.setString("MONOLYMPIC GAMES");
 
 
     sf::Text introScreenText2;
@@ -55,7 +55,7 @@ int main(){
 
     // créer un bouton pour commencer le jeu
     sf::Texture newGameButtonTexture;
-    newGameButtonTexture.loadFromFile("assets/Start.png");
+    newGameButtonTexture.loadFromFile("assets/Start2.png");
     sf::RectangleShape newGameButton(sf::Vector2f(316.0f, 94.0f));
     newGameButton.setTexture(&newGameButtonTexture);
     newGameButton.setPosition(sf::Vector2f(480.0f, 210.0f));
@@ -86,35 +86,51 @@ int main(){
 
     // Pour charger une image de fond pour la sélection des noms des joueurs et des pions
     sf::Texture selectionScreenTexture;
-    selectionScreenTexture.loadFromFile("assets/selection-screen.png");
+    selectionScreenTexture.loadFromFile("assets/background.png");
     sf::RectangleShape selectionScreen(sf::Vector2f(1280.0f, 720.0f));
     selectionScreen.setTexture(&selectionScreenTexture);
 
     // créer un bouton pour entrer le nom du joueur
     sf::Texture enternametexture;
-    enternametexture.loadFromFile("assets/entrer_nom.png");
-    sf::RectangleShape enternamebutton(sf::Vector2f(316.0f, 94.0f));
+    enternametexture.loadFromFile("assets/name.png");
+    sf::RectangleShape enternamebutton(sf::Vector2f(500.0f, 500.0f));
     enternamebutton.setTexture(&enternametexture);
-    enternamebutton.setPosition(sf::Vector2f(480.0f, 210.0f));
+    // Calcul de la position pour centrer l'image
+    float x = (window.getSize().x - enternamebutton.getSize().x) / 2.0f;
+    float y = (window.getSize().y - enternamebutton.getSize().y) / 2.0f;
+    enternamebutton.setPosition(sf::Vector2f(x, y));
  
     // box pour entrer le nom du joueur
     sf::RectangleShape nameInputBox(sf::Vector2f(300.0f, 50.0f));
-    nameInputBox.setFillColor(sf::Color::White);
-    nameInputBox.setPosition(sf::Vector2f(480.0f, 300.0f));
+    nameInputBox.setFillColor(sf::Color::Black);
+    nameInputBox.setPosition(sf::Vector2f(490.0f, 425.0f));
+    // Récupérer la taille de la boîte de texte
 
-    // texte pour entrer le nom du joueur
     sf::Text nameInputText;
     nameInputText.setFont(stdFont);
     nameInputText.setCharacterSize(20);
-    nameInputText.setPosition(sf::Vector2f(480.0f, 300.0f));
-    nameInputText.setFillColor(sf::Color::Black); // Définir la couleur du texte en noir
+    nameInputText.setFillColor(sf::Color::White); // Définir la couleur du texte en blanc
+
+    // Largeur de la fenêtre
+    float windowWidth = 1200.0f;
+
+    // Positionner le texte au centre horizontalement en ajustant pour le point d'origine
+    float textWidth = nameInputText.getGlobalBounds().width;
+    float centerX = (windowWidth - textWidth) / 2.0f;
+    float textHeight = nameInputText.getGlobalBounds().height;
+    float centerY = 440.0f - textHeight / 2.0f;
+
+    nameInputText.setPosition(sf::Vector2f(centerX, centerY));
+
+
+
 
     // Ajout bouton pour valider le nom du joueur
     sf::Texture validatetexture;
-    validatetexture.loadFromFile("assets/validate.png");
+    validatetexture.loadFromFile("assets/valider.png");
     sf::RectangleShape validatebutton(sf::Vector2f(316.0f, 94.0f));
     validatebutton.setTexture(&validatetexture);
-    validatebutton.setPosition(sf::Vector2f(480.0f, 350.0f));
+    validatebutton.setPosition(sf::Vector2f(480.0f, 500.0f));
     
 
     if (gameStarted) {
@@ -146,14 +162,27 @@ int main(){
 
             window.clear();
             window.draw(selectionScreen);
+            window.draw(enternamebutton);
             window.draw(nameInputBox);
             window.draw(nameInputText);
-            window.draw(enternamebutton);
             window.draw(validatebutton);
             window.display();
             
         }
     }
+
+     
+    // Créer un bouton pour entrer le nom du joueur avec une image
+    // Créer un bouton pour entrer le nom du joueur avec une image
+    sf::Texture chooseImageTexture;
+    chooseImageTexture.loadFromFile("assets/chooseimage.png");
+    sf::Sprite chooseImageSprite(chooseImageTexture);
+
+    // Calcul de la position pour centrer l'image
+    float imageX = (window.getSize().x - chooseImageSprite.getGlobalBounds().width) / 2.0f;
+    float imageY = (window.getSize().y - chooseImageSprite.getGlobalBounds().height) / 2.0f;
+    chooseImageSprite.setPosition(sf::Vector2f(imageX, imageY));
+
 
     // Choix du pions : 4 choix de pions
 
@@ -161,19 +190,20 @@ int main(){
     pion1texture.loadFromFile("assets/pion.png");
     sf::RectangleShape pion1(sf::Vector2f(50.0f, 50.0f));
     pion1.setTexture(&pion1texture);
-    pion1.setPosition(sf::Vector2f(480.0f, 400.0f));
+    pion1.setPosition(sf::Vector2f(550.0f, 440.0f));
 
     sf::Texture pion2texture;
     pion2texture.loadFromFile("assets/pion2.png");
     sf::RectangleShape pion2(sf::Vector2f(50.0f, 50.0f));
     pion2.setTexture(&pion2texture);
-    pion2.setPosition(sf::Vector2f(480.0f, 450.0f));
+    pion2.setPosition(sf::Vector2f(550.0f + 60.0f, 440.0f));  // Ajout de 60.0f pour décaler le deuxième pion
 
     sf::Texture pion3texture;
     pion3texture.loadFromFile("assets/pion3.png");
     sf::RectangleShape pion3(sf::Vector2f(50.0f, 50.0f));
     pion3.setTexture(&pion3texture);
-    pion3.setPosition(sf::Vector2f(480.0f, 500.0f));
+    pion3.setPosition(sf::Vector2f(550.0f + 2 * 60.0f, 440.0f));  // Ajout de 2 * 60.0f pour décaler le troisième pion
+
 
    
 
@@ -208,6 +238,7 @@ if (gameStarted) {
 
         window.clear();
         window.draw(selectionScreen);
+        window.draw(chooseImageSprite);
         window.draw(pion1);
         window.draw(pion2);
         window.draw(pion3);
