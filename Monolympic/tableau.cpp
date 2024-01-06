@@ -85,12 +85,12 @@ sf::Sprite sprite;
         if (positions[i].x != positionDepartGauche.x - caseNormaleRotateSize.x) {
             point.setPosition(positions[i] + sf::Vector2f(caseShape.getSize().x / 2.0f, caseShape.getSize().y / 2.0f));
             points.push_back(point.getPosition());
-            printf("Point : %zu (%f, %f)\n", i, point.getPosition().x, point.getPosition().y);
+            //printf("Point : %zu (%f, %f)\n", i, point.getPosition().x, point.getPosition().y);
         } else {
             point.setPosition(positions[i] + sf::Vector2f(caseShape.getSize().x / 2.0f, caseShape.getSize().y / 2.0f));
             point.move(caseNormaleRotateSize.x, 0.0f);
             points.push_back(point.getPosition());
-            printf("Point : %zu (%f, %f)\n", i, point.getPosition().x, point.getPosition().y);
+            //printf("Point : %zu (%f, %f)\n", i, point.getPosition().x, point.getPosition().y);
         }
     }
     return points;
@@ -106,6 +106,7 @@ std::vector<sf::Sprite> Tableau::initializeDiceSprites(Des& des, sf::Vector2f bu
     int sommeDes = de1 + de2;
     int nouvellePosition = (position + sommeDes) % points.size();
     pion.deplacerVers(points[nouvellePosition]);
+    actionAtPosition(nouvellePosition);
     position = nouvellePosition;
     std::vector<sf::Sprite> diceSprites;
     // Charger les images des dés en dehors de la boucle principale
@@ -138,7 +139,7 @@ std::vector<sf::Sprite> Tableau::initializeDiceSprites(Des& des, sf::Vector2f bu
             std::cerr << "Erreur lors du chargement de l'image du dé " << i << std::endl;
         }
 
-        std::cout << "Chemin de l'image du dé " << i << " : " << dicePaths[i] << std::endl;
+        //std::cout << "Chemin de l'image du dé " << i << " : " << dicePaths[i] << std::endl;
     }
     return diceSprites;
 }

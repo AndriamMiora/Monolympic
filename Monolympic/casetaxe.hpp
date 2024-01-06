@@ -1,3 +1,11 @@
+#include <SFML/Graphics.hpp>
+#include <iostream>
+#include <vector>
+#include "case.hpp"
+#include <string.h>
+#pragma once
+#include <vector>
+
 // Classe pour représenter une case de taxe
 class CaseTaxe : public Case {
 protected:

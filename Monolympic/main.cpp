@@ -5,7 +5,6 @@
 #include <ctime>
 #include <vector>
 #include "case.hpp"
-#include "board.hpp"
 #include "Pion.hpp"
 #include "Des.hpp"
 #include "Button.hpp"
@@ -151,6 +150,7 @@ int main(){
             window.draw(enternamebutton);
             window.draw(validatebutton);
             window.display();
+            
         }
     }
 
