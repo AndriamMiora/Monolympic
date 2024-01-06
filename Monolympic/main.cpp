@@ -6,6 +6,11 @@
 #include <vector>
 #include "case.hpp"
 #include "board.hpp"
+#include "Pion.hpp"
+#include "Des.hpp"
+#include "Button.hpp"
+#include "tableau.hpp"
+#include <string>
 
 
 using namespace std;
@@ -152,19 +157,19 @@ int main(){
     // Choix du pions : 4 choix de pions
 
     sf::Texture pion1texture;
-    pion1texture.loadFromFile("assets/player1.png");
+    pion1texture.loadFromFile("assets/pion.png");
     sf::RectangleShape pion1(sf::Vector2f(50.0f, 50.0f));
     pion1.setTexture(&pion1texture);
     pion1.setPosition(sf::Vector2f(480.0f, 400.0f));
 
     sf::Texture pion2texture;
-    pion2texture.loadFromFile("assets/player2.png");
+    pion2texture.loadFromFile("assets/pion2.png");
     sf::RectangleShape pion2(sf::Vector2f(50.0f, 50.0f));
     pion2.setTexture(&pion2texture);
     pion2.setPosition(sf::Vector2f(480.0f, 450.0f));
 
     sf::Texture pion3texture;
-    pion3texture.loadFromFile("assets/player3.png");
+    pion3texture.loadFromFile("assets/pion3.png");
     sf::RectangleShape pion3(sf::Vector2f(50.0f, 50.0f));
     pion3.setTexture(&pion3texture);
     pion3.setPosition(sf::Vector2f(480.0f, 500.0f));
@@ -210,62 +215,92 @@ if (gameStarted) {
     }
 }
 
-// Code pour la deuxième boucle (affichage du plateau de jeu)
 if (gameStarted) {
-    sf::Texture boardtexture;
-    boardtexture.loadFromFile("Board.jpeg");
-    sf::RectangleShape board(sf::Vector2f(1280.0f, 720.0f));
-    board.setTexture(&boardtexture);
+    Tableau tableau;
+    std::vector<sf::Vector2f> points = tableau.getPoints();
+    Des des;
+    int position = 0;
 
-    //  Création du plateau de jeu
-    Board plateau;
+    // Initialisation du pion du joueur en bas à droite du plateau
+    Pion pion("assets/pion.png",  sf::Vector2f(871.900024, 624.000000) );
+    if (playerPion == "pion1") {
+        pion.setCheminImage("assets/pion.png");
+    } else if (playerPion == "pion2") {
+        pion.setCheminImage("assets/pion2.png");
+    } else if (playerPion == "pion3") {
+        pion.setCheminImage("assets/pion3.png");
+    }
 
-    bool boardSelected = false;
-    string playerBoard = "";
-    while (!boardSelected && window.isOpen()) {
-        sf::Event evt;
-        while (window.pollEvent(evt)) {
-            if (evt.type == sf::Event::Closed) {
+    Button rollButton("assets/roll.png");
+
+    // Dimensions de la fenêtre
+    float windowWidth = static_cast<float>(window.getSize().x);
+    float windowHeight = static_cast<float>(window.getSize().y);
+
+    // Dimensions du bouton après ajustement
+    float buttonWidth = rollButton.getSize().x * 0.2f;
+    float buttonHeight = rollButton.getSize().y * 0.2f;
+
+    // Décalages spécifiés
+    float topOffset = 20.0f;
+    float leftOffset = 1100.0f;
+    float bottomOffset = 200.0f;
+    float rightOffset = 45.0f;
+
+    // Calcul des coordonnées en fonction des décalages
+    float xPosition = leftOffset;
+    float yPosition = topOffset;
+
+    // Ajustement de la position en fonction de la taille du bouton
+    xPosition = std::min(xPosition, windowWidth - rightOffset - buttonWidth);
+    yPosition = std::min(yPosition, windowHeight - bottomOffset - buttonHeight);
+
+    // Positionnement du bouton
+    rollButton.setPosition(sf::Vector2f(xPosition, yPosition));
+
+    rollButton.setScale(sf::Vector2f(0.2f, 0.2f));  // Ajustement de la taille
+
+    std::vector<sf::Sprite> diceSprites;
+    sf::Texture texture;
+    if (!texture.loadFromFile("board.png")) {
+        std::cout << "Erreur lors du chargement de l'image du dé." << std::endl;
+    }
+    sf::RenderWindow window(sf::VideoMode(1280, 720), "Plateau de jeu");
+    sf::Sprite sprite = sf::Sprite(texture);
+    while (window.isOpen()) {
+        sf::Event event;
+        while (window.pollEvent(event)) {
+            if (event.type == sf::Event::Closed) {
                 window.close();
             }
-            if (evt.type == sf::Event::MouseButtonPressed && evt.mouseButton.button == sf::Mouse::Left) {
-                sf::Vector2f mousePos = window.mapPixelToCoords(sf::Mouse::getPosition(window));
-                if (board.getGlobalBounds().contains(mousePos)) {
-                    boardSelected = true;
-                    playerBoard = "board";
-                }
+
+            rollButton.handleEvent(event, window);
+
+            if (rollButton.isClicked()) {
+                diceSprites = tableau.initializeDiceSprites(des, rollButton.getPosition(), position, points, pion);
+                rollButton.resetClicked();
             }
         }
-        // Ajout de quelques cases
-        plateau.addCase(std::unique_ptr<Case>(new CaseDepart(5, Point{1, 1})));
-        plateau.addCase(std::unique_ptr<Case>(new CaseTaxe(10)));
-        plateau.addCase(std::unique_ptr<Case>(new CaseDepart(3, Point{2, 2})));
-        plateau.addCase(std::unique_ptr<Case>(new CaseTaxe(5)));
-
-        plateau.play();
-
 
         window.clear();
-        window.draw(board);
-        // afficher le pion du joueur en bas à droite du plateau
-        if (playerPion == "pion1") {
-            pion1.setPosition(sf::Vector2f(1000.0f, 400.0f));
-            window.draw(pion1);
+        window.draw(sprite);
+        for (size_t i = 0; i < diceSprites.size(); ++i) {
+            window.draw(diceSprites[i]);
         }
-        if (playerPion == "pion2") {
-            pion2.setPosition(sf::Vector2f(1000.0f, 400.0f));
-            window.draw(pion2);
+
+        for (size_t i = 0; i < points.size(); ++i) {
+            sf::CircleShape point(2.0f);
+            point.setPosition(points[i]);
+            point.setFillColor(sf::Color::Red);
+            window.draw(point);
         }
-        if (playerPion == "pion3") {
-            pion3.setPosition(sf::Vector2f(1000.0f, 400.0f));
-            window.draw(pion3);
-        }
-    
+
+        pion.afficher(window);
+        rollButton.draw(window);
+
         window.display();
     }
 }
 
-window.clear();
-window.close();
-return 0;
+    return 0;
 }
