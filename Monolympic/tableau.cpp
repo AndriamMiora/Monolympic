@@ -122,7 +122,9 @@ int main() {
     Des des;
     std::vector<sf::Sprite> diceSprites;
     int position = 0;
-    while (window.isOpen()) {
+    std::vector<sf::Texture> diceTextures;
+
+while (window.isOpen()) {
     sf::Event event;
     while (window.pollEvent(event)) {
         if (event.type == sf::Event::Closed) {
@@ -147,49 +149,56 @@ int main() {
         // Charger les images des dés en dehors de la boucle principale
         std::vector<std::string> dicePaths = des.getDiceImages(de1, de2);
         diceSprites.clear();
+        diceTextures.clear(); // Ajout de cette ligne pour vider le vecteur de textures
+
         // Position des dés
-        float xOffset = 25.0f; 
-        float yOffset = 110.0f; 
+        float xOffset = 25.0f;
+        float yOffset = 110.0f;
         float spaceBetweenDice = 20.0f; // L'espace souhaité entre les dés
-        float verticalMargin = 5.0f; // L'espace souhaité au-dessus et en dessous de chaque dé
-        float diceScaleFactor = 0.5f; // L'échelle souhaitée (réduire la taille du dé)
+        float verticalMargin = 5.0f;    // L'espace souhaité au-dessus et en dessous de chaque dé
+        float diceScaleFactor = 0.5f;   // L'échelle souhaitée (réduire la taille du dé)
 
-sf::Vector2f buttonPosition = rollButton.getPosition();
+        sf::Vector2f buttonPosition = rollButton.getPosition();
 
-    // Créer et positionner les sprites des dés
-    for (size_t i = 0; i < dicePaths.size(); ++i) {
-        sf::Texture diceTexture;
-        if (diceTexture.loadFromFile(dicePaths[i])) {
-            sf::Sprite diceSprite(diceTexture);
-            // Ajustez la taille des dés en modifiant l'échelle
-            diceSprite.setScale(diceScaleFactor, diceScaleFactor);
-
-            // Ajustez les coordonnées pour espacer les dés horizontalement
-            diceSprite.setPosition(buttonPosition.x + xOffset, buttonPosition.y + yOffset + verticalMargin);
-
-            diceSprites.push_back(diceSprite);
-
-            // Augmentez xOffset pour ajouter un espace entre les dés
-            xOffset += diceSprite.getGlobalBounds().width + spaceBetweenDice;
-        } else {
-            std::cerr << "Erreur lors du chargement de l'image du dé depuis le chemin : " << dicePaths[i] << std::endl;
+        // Créer et positionner les sprites des dés
+        for (size_t i = 0; i < dicePaths.size(); ++i) {
+            sf::Texture texture;
+            if (texture.loadFromFile(dicePaths[i])) {
+                diceTextures.push_back(texture);
+            }
         }
-        // Ajoutez ces lignes pour voir les chemins réels des images
-        std::cout << "Chemin de l'image du dé " << i << " : " << dicePaths[i] << std::endl;
-    }
+
+        for (size_t i = 0; i < dicePaths.size(); ++i) {
+            if (diceTextures[i].loadFromFile(dicePaths[i])) {
+                sf::Sprite diceSprite(diceTextures[i]);
+
+                // Ajustez la taille des dés en modifiant l'échelle
+                diceSprite.setScale(diceScaleFactor, diceScaleFactor);
+
+                // Ajustez les coordonnées pour espacer les dés horizontalement
+                diceSprite.setPosition(buttonPosition.x + xOffset, buttonPosition.y + yOffset + verticalMargin);
+
+                diceSprites.push_back(diceSprite);
+
+                // Augmentez xOffset pour ajouter un espace entre les dés
+                xOffset += diceSprite.getGlobalBounds().width + spaceBetweenDice;
+            } else {
+                std::cerr << "Erreur lors du chargement de l'image du dé " << i << std::endl;
+            }
+
+            // Ajoutez ces lignes pour voir les chemins réels des images
+            std::cout << "Chemin de l'image du dé " << i << " : " << dicePaths[i] << std::endl;
+        }
+
         rollButton.resetClicked();
-
-        // Après la boucle de création des sprites des dés
-        for (const auto& diceSprite : diceSprites) {
-            std::cout << "Sprite créé avec succès à la position : (" << diceSprite.getPosition().x << ", " << diceSprite.getPosition().y << ")" << std::endl;
-        }
     }
 
-    window.clear(sf::Color::White);
+    window.clear();
     window.draw(sprite);
     // Draw the dice sprites
-    for (const auto& diceSprite : diceSprites) {
-        window.draw(diceSprite);
+
+    for (size_t i = 0; i < diceSprites.size(); ++i) {
+        window.draw(diceSprites[i]);
     }
 
     for (size_t i = 0; i < points.size(); ++i) {
@@ -204,7 +213,6 @@ sf::Vector2f buttonPosition = rollButton.getPosition();
 
     window.display();
 }
-
 
     return 0;
 }

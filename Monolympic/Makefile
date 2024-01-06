@@ -6,6 +6,7 @@ all: mon_programme
 
 mon_programme: tableau.cpp Pion.cpp Des.cpp Button.cpp 
 	$(CXX) $(CXXFLAGS) -o mon_programme tableau.cpp Pion.cpp Des.cpp Button.cpp $(LIBS)
+	./mon_programme
 
 clean:
 	rm -f mon_programme
