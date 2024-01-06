@@ -1,6 +1,8 @@
 #pragma once
 #include "case.hpp"
 #include <iostream>
+#include "joueur.hpp"
+
 
 class CaseDepart : public Case {
 private:
@@ -18,7 +20,8 @@ public:
     int getNbMedailles() const { return nbmedailles; }
 
     // Implémentation de la fonction virtuelle pure
-    void action() const override {
+    void action(Joueur& j) const override {
         std::cout << "Vous êtes sur la case Départ (position " << getPosition() << ") et vous gagnez " << getNbMedailles() << " médailles !" << std::endl;
+        j.setPoints(j.getPoints() + getNbMedailles());
     }
 };

@@ -10,6 +10,7 @@
 #include "Button.hpp"
 #include "tableau.hpp"
 #include <string>
+#include "joueur.hpp"
 
 
 using namespace std;
@@ -221,14 +222,25 @@ if (gameStarted) {
     Des des;
     int position = 0;
 
+    // Création des joueurs
+    Joueur* joueur2 = new Joueur(/* ... */);
+    Joueur* joueur1 = new Joueur(/* ... */);
+    
     // Initialisation du pion du joueur en bas à droite du plateau
     Pion pion("assets/pion.png",  sf::Vector2f(871.900024, 624.000000) );
     if (playerPion == "pion1") {
         pion.setCheminImage("assets/pion.png");
+        joueur1->setPion(&pion);
+        tableau.addJoueur(joueur1);
+        
     } else if (playerPion == "pion2") {
         pion.setCheminImage("assets/pion2.png");
+        joueur1->setPion(&pion);
+        tableau.addJoueur(joueur1);
     } else if (playerPion == "pion3") {
         pion.setCheminImage("assets/pion3.png");
+        joueur1->setPion(&pion);
+        tableau.addJoueur(joueur1);
     }
 
     Button rollButton("assets/roll.png");
@@ -277,7 +289,7 @@ if (gameStarted) {
             rollButton.handleEvent(event, window);
 
             if (rollButton.isClicked()) {
-                diceSprites = tableau.initializeDiceSprites(des, rollButton.getPosition(), position, points, pion);
+                diceSprites = tableau.initializeDiceSprites(des, rollButton.getPosition(), position, points, *joueur1);
                 rollButton.resetClicked();
             }
         }

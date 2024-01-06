@@ -1,5 +1,6 @@
 #pragma once
-
+#include <vector>
+#include "joueur.hpp"
 // Création d'un type Point pour les coordonnées
 
 
@@ -16,7 +17,7 @@ public:
     Case() = default;
 
     // Fonction virtuelle pure
-    virtual void action() const = 0;
+    virtual void action(Joueur& J) const = 0;
 
     // Getter pour les coordonnées
     int getPosition() const {

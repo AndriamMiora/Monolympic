@@ -13,7 +13,7 @@
 #include "casequiz.hpp"
 #include "caseservicepublic.hpp"
 #include "casetaxe.hpp"
-
+#include "joueur.hpp"
 
 #pragma once
 #include <vector>
@@ -21,6 +21,7 @@
 class Tableau {
     private:
     std::vector<Case*> cases; // Utilisez un vecteur de pointeurs de la classe de base
+    std::vector<Joueur*> joueurs; // Utilisez un vecteur de pointeurs de la classe de base
 
 public:
     Tableau() {
@@ -68,7 +69,7 @@ public:
 
     std::vector<sf::Vector2f> getPoints();
 
-    std::vector<sf::Sprite> initializeDiceSprites(Des& des, sf::Vector2f buttonPosition, int& position, std::vector<sf::Vector2f> points, Pion& pion);
+    std::vector<sf::Sprite> initializeDiceSprites(Des& des, sf::Vector2f buttonPosition, int& position, std::vector<sf::Vector2f> points, Joueur& joueur);
     // Méthodes pour ajouter des instances spécifiques de cases en fonction de leur type
    void addChanceCase(int position) {
         cases.push_back(new CaseChance(position));
@@ -116,9 +117,34 @@ public:
     void actionAtPosition(int pos) const {
         Case* c = getCaseAtPosition(pos);
         if (c != nullptr) {
-            c->action();
+            c->action( *joueurs[0]);
+            std::cout << "nombre de médailles : " << joueurs[0]->getPoints() << std::endl;
         } else {
             std::cout << "Aucune case à la position " << pos << "." << std::endl;
         }
     }
+    // Méthode pour ajouter un joueur au tableau
+    void addJoueur(Joueur* joueur) {
+        joueurs.push_back(joueur);
+    }
+
+    // Méthode pour récupérer tous les joueurs
+    std::vector<Joueur*> getJoueurs() const {
+        return joueurs;
+    }
+
+    // Méthode pour récupérer un joueur par son index dans le vecteur
+    Joueur* getJoueurAtIndex(int index) const {
+        if (index >= 0 && index < joueurs.size()) {
+            return joueurs[index];
+        }
+        return nullptr; // Index invalide
+    }
+
+    // Méthode pour mettre à jour le pion et les points d'un joueur
+    void updateJoueur(Joueur* joueur, Pion* pion, int points) {
+        joueur->setPion(pion);
+        joueur->setPoints(points);
+    }
+
 };
