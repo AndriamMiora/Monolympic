@@ -171,8 +171,6 @@ int main(){
         }
     }
 
-     
-    // Créer un bouton pour entrer le nom du joueur avec une image
     // Créer un bouton pour entrer le nom du joueur avec une image
     sf::Texture chooseImageTexture;
     chooseImageTexture.loadFromFile("assets/chooseimage.png");
