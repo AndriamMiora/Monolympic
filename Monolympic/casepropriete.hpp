@@ -11,6 +11,20 @@ class CasePropriete : public Case {
 public:
     CasePropriete(int _position, int _cout, bool _estAchete) : Case(_position), cout(_cout), estAchete(_estAchete) {}
 
+    // Méthode pour get l'état de la case
+    bool getEtat() const {
+        return estAchete;
+    }
+
+    // Méthode pour get le cout de la case
+    int getCout() const {
+        return cout;
+    }
+
+    // Méthode pour set l'état de la case
+    void setEtat(bool _estAchete) const {
+        estAchete = _estAchete;
+    }
     // Méthode pour effectuer l'action de la case à une position donnée
    // Méthode pour effectuer l'action de la case à une position donnée
 void action(Joueur& J, sf::RenderWindow& window) const override {
@@ -75,7 +89,13 @@ while (!reponse) {
                 if (cercle1.getGlobalBounds().contains(event.mouseButton.x, event.mouseButton.y)) {
                     reponse = true;
                     J.setPoints(J.getPoints() - cout);
-
+                    // dire que l'état de la case à la position est acheté
+                    setEtat(true);
+                    // ajouter la position de la case à la liste des cases achetées par le joueur
+                    std::vector<int> casesAchetees = J.getCasesAchetees();
+                            casesAchetees.push_back(getPosition());
+                            J.setCasesAchetees(casesAchetees);
+                            
                     // Affichage au milieu de la carte de la propriété png
                     sf::Texture texture;
                     if (!texture.loadFromFile("test.png")) {
@@ -108,5 +128,5 @@ while (!reponse) {
 
 private:
     int cout;
-    bool estAchete;
+     mutable bool estAchete;
 };
