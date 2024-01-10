@@ -53,6 +53,8 @@ public:
     void setCasesAchetees(std::vector<int> casesAchetees) {
         this->casesAchetees = casesAchetees;
     }
+
+    
     // Destructeur
     ~Joueur() {
         // Libérer la mémoire du pion si nécessaire
