@@ -13,15 +13,16 @@ private:
     // Nombre de points du joueur
     int points;
 
-    
+    // vecteur avec la liste des positions des cases achetées par le joueur
+    std::vector<int>casesAchetees;
 
 public:
 
     // Constructeur avec initialisation du pion
-    Joueur(Pion* pion, int points) : pion(pion), points(points) {}
+    Joueur(Pion* pion, int points, std::vector<int>casesAchetees) : pion(pion), points(points), casesAchetees(casesAchetees) {}
 
     // Constructeur par défaut
-    Joueur() : pion(nullptr), points(0) {}
+    Joueur() : pion(nullptr), points(200), casesAchetees() {}
 
     // Getter pour le pion
     Pion* getPion() const {
@@ -43,6 +44,15 @@ public:
         this->pion = pion;
     }
     
+    // Getter pour les cases achetées
+    std::vector<int> getCasesAchetees() const {
+        return casesAchetees;
+    }
+
+    // Setter pour les cases achetées
+    void setCasesAchetees(std::vector<int> casesAchetees) {
+        this->casesAchetees = casesAchetees;
+    }
     // Destructeur
     ~Joueur() {
         // Libérer la mémoire du pion si nécessaire

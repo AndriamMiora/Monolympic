@@ -100,7 +100,7 @@ sf::Sprite sprite;
 std::vector<sf::Texture> diceTextures;
 
 // Fonction pour initialiser les sprites des dés
-std::vector<sf::Sprite> Tableau::initializeDiceSprites(Des& des, sf::Vector2f buttonPosition, int& position, std::vector<sf::Vector2f> points, Joueur& joueur) {
+std::vector<sf::Sprite> Tableau::initializeDiceSprites(Des& des, sf::Vector2f buttonPosition, int& position, std::vector<sf::Vector2f> points, Joueur& joueur, sf::RenderWindow& window) {
     int de1 = des.lancerDe();
     int de2 = des.lancerDe();
     int sommeDes = de1 + de2;
@@ -111,7 +111,7 @@ std::vector<sf::Sprite> Tableau::initializeDiceSprites(Des& des, sf::Vector2f bu
     int nouvellePosition = (position + sommeDes) % points.size();
    
     joueur.getPion()->deplacerVers(points[nouvellePosition]);
-    actionAtPosition(nouvellePosition);
+    actionAtPosition(nouvellePosition, window);
     position = nouvellePosition;
     std::vector<sf::Sprite> diceSprites;
     // Charger les images des dés en dehors de la boucle principale

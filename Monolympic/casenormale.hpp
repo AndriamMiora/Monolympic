@@ -11,7 +11,7 @@ class CaseNormale : public Case {
 public:
     CaseNormale(int _position) : Case(_position) {}
 
-    void action(Joueur& j) const override {
+    void action(Joueur& J, sf::RenderWindow& window) const override{
         std::cout << "Vous êtes sur une case normale (position " << getPosition() << "). Rien ne se passe ici." << std::endl;
     }
 };

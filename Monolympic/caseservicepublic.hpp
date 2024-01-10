@@ -11,7 +11,7 @@ class CaseServicePublic : public Case {
 public:
     CaseServicePublic(int _position, const std::string& _type) : Case(_position), type(_type) {}
 
-    void action(Joueur& j) const override {
+    void action(Joueur& J, sf::RenderWindow& window) const override{
         std::cout << "Vous êtes sur une case de service public (position " << getPosition() << ") de type " << type << "." << std::endl;
     }
 

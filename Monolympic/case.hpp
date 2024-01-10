@@ -17,8 +17,9 @@ public:
     Case() = default;
 
     // Fonction virtuelle pure
-    virtual void action(Joueur& J) const = 0;
+    virtual void action(Joueur& J, sf::RenderWindow& window) const = 0;
 
+ 
     // Getter pour les coordonnées
     int getPosition() const {
         return position;

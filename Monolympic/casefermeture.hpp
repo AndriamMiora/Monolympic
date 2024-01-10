@@ -12,7 +12,7 @@ class CaseFermetureVille : public Case {
 public:
     CaseFermetureVille(int _position) : Case(_position) {}
 
-    void action(Joueur& j) const override {
+    void action(Joueur& J, sf::RenderWindow& window) const override{
         std::cout << "Vous êtes sur une case de fermeture de ville (position " << getPosition() << ")." << std::endl;
     }
 };

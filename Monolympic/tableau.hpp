@@ -26,50 +26,50 @@ class Tableau {
 public:
     Tableau() {
         ajouterCaseDepart(0, 0);
-        addPropertyCase(1 , 200);
+        addPropertyCase(1 , 200, false);
         addQuizCase(2);
-        addPropertyCase(3 , 200);
+        addPropertyCase(3 , 200, false);
         addTaxCase(4 , 10);
         addNormalCase(5);
-        addPropertyCase(6, 200);
+        addPropertyCase(6, 200, false);
         addChanceCase(7);
-        addPropertyCase(8 , 200);
-        addPropertyCase(9 , 200);
+        addPropertyCase(8 , 200, false);
+        addPropertyCase(9 , 200, false);
         addNormalCase(10);
-        addPropertyCase(11 , 200);
+        addPropertyCase(11 , 200, false);
         addServiceCase(12, "Électricité");
-        addPropertyCase(13 , 200);
-        addPropertyCase(14 , 200);
+        addPropertyCase(13 , 200, false);
+        addPropertyCase(14 , 200, false);
         addChanceCase(15);
-        addPropertyCase(16 , 200);
+        addPropertyCase(16 , 200, false);
         addQuizCase(17);
-        addPropertyCase(18 , 200);
-        addPropertyCase(19 , 200);
+        addPropertyCase(18 , 200, false);
+        addPropertyCase(19 , 200, false);
         addNormalCase(20);
-        addPropertyCase(21 , 200);
-        addPropertyCase(22 , 200);
+        addPropertyCase(21 , 200, false);
+        addPropertyCase(22 , 200, false);
         addChanceCase(23);
-        addPropertyCase(24 , 200);
-        addPropertyCase(25 , 200);
+        addPropertyCase(24 , 200, false);
+        addPropertyCase(25 , 200, false);
         addTaxCase(26 , 10);
-        addPropertyCase(27 , 200);
+        addPropertyCase(27 , 200, false);
         addQuizCase(28);
-        addPropertyCase(29 , 200);
+        addPropertyCase(29 , 200, false);
         addCloseCityCase(30);
-        addPropertyCase(31 , 200);
-        addPropertyCase(32 , 200);
+        addPropertyCase(31 , 200, false);
+        addPropertyCase(32 , 200, false);
         addQuizCase(33);
-        addPropertyCase(34 , 200);
+        addPropertyCase(34 , 200, false);
         addServiceCase(35, "Main d'œuvre");
         addChanceCase(36);
-        addPropertyCase(37 , 200);
+        addPropertyCase(37 , 200, false);
         addServiceCase(38, "Eau");
-        addPropertyCase(39 , 200);
+        addPropertyCase(39 , 200, false);
     }
 
     std::vector<sf::Vector2f> getPoints();
 
-    std::vector<sf::Sprite> initializeDiceSprites(Des& des, sf::Vector2f buttonPosition, int& position, std::vector<sf::Vector2f> points, Joueur& joueur);
+    std::vector<sf::Sprite> initializeDiceSprites(Des& des, sf::Vector2f buttonPosition, int& position, std::vector<sf::Vector2f> points, Joueur& joueur, sf::RenderWindow& window);
     // Méthodes pour ajouter des instances spécifiques de cases en fonction de leur type
    void addChanceCase(int position) {
         cases.push_back(new CaseChance(position));
@@ -87,8 +87,8 @@ public:
         cases.push_back(new CaseNormale(position));
     }
 
-    void addPropertyCase(int position, int cout) {
-        cases.push_back(new CasePropriete(position, cout));
+    void addPropertyCase(int position, int cout, bool etat) {
+        cases.push_back(new CasePropriete(position, cout, etat));
     }
 
     void addQuizCase(int position) {
@@ -114,10 +114,10 @@ public:
     }
 
     // Méthode pour effectuer l'action de la case à une position donnée
-    void actionAtPosition(int pos) const {
+    void actionAtPosition(int pos, sf ::RenderWindow& window) {
         Case* c = getCaseAtPosition(pos);
         if (c != nullptr) {
-            c->action( *joueurs[0]);
+            c->action( *joueurs[0] , window);
             std::cout << "nombre de médailles : " << joueurs[0]->getPoints() << std::endl;
         } else {
             std::cout << "Aucune case à la position " << pos << "." << std::endl;
@@ -147,4 +147,5 @@ public:
         joueur->setPoints(points);
     }
 
+    
 };

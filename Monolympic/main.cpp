@@ -318,7 +318,7 @@ if (gameStarted) {
             rollButton.handleEvent(event, window);
 
             if (rollButton.isClicked()) {
-                diceSprites = tableau.initializeDiceSprites(des, rollButton.getPosition(), position, points, *joueur1);
+                diceSprites = tableau.initializeDiceSprites(des, rollButton.getPosition(), position, points, *joueur1, window);
                 rollButton.resetClicked();
             }
         }
