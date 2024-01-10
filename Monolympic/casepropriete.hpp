@@ -23,7 +23,7 @@ void action(Joueur& J, sf::RenderWindow& window) const override {
 
         sf::Text message;
         message.setFont(font);
-        message.setString("Voulez-vous acheter cette propriete ?");
+        message.setString("Vous allez vous deplacer sur une case propriete. Voulez-vous l'acheter pour " + std::to_string(cout) + " medailles ?");
         message.setCharacterSize(24);
         message.setFillColor(sf::Color::White);
 
@@ -59,43 +59,51 @@ void action(Joueur& J, sf::RenderWindow& window) const override {
         window.display(); 
 
         // Boucle pour attendre la réponse du joueur
-        bool reponse = false;
-        while (!reponse) {
-            sf::Event event;
-            while (window.pollEvent(event)) {
-                // Si on appuie sur la croix rouge
-                if (event.type == sf::Event::Closed) {
-                    window.close();
-                    exit(0);
-                }
-                // Si on clique sur le cercle vert
-                if (event.type == sf::Event::MouseButtonPressed) {
-                    if (event.mouseButton.button == sf::Mouse::Left) {
-                        if (cercle1.getGlobalBounds().contains(event.mouseButton.x, event.mouseButton.y)) {
-                            reponse = true;
-                        }
+       // Boucle pour attendre la réponse du joueur
+bool reponse = false;
+while (!reponse) {
+    sf::Event event;
+    while (window.pollEvent(event)) {
+        // Si on appuie sur la croix rouge
+        if (event.type == sf::Event::Closed) {
+            window.close();
+            return;  // Sortir de la fonction
+        }
+        // Si on clique sur le cercle vert
+        if (event.type == sf::Event::MouseButtonPressed) {
+            if (event.mouseButton.button == sf::Mouse::Left) {
+                if (cercle1.getGlobalBounds().contains(event.mouseButton.x, event.mouseButton.y)) {
+                    reponse = true;
+                    J.setPoints(J.getPoints() - cout);
+
+                    // Affichage au milieu de la carte de la propriété png
+                    sf::Texture texture;
+                    if (!texture.loadFromFile("test.png")) {
+                        std::cerr << "Erreur lors du chargement de la texture" << std::endl;
                     }
+                    sf::Sprite sprite;
+                    sprite.setTexture(texture);
+                    sprite.setOrigin(texture.getSize().x / 2.0f, texture.getSize().y / 2.0f);
+                    sprite.setPosition(window.getSize().x / 2.0f, window.getSize().y / 2.0f);
+                    window.draw(sprite);
+                    window.display();
+                    sf::sleep(sf::seconds(2));
                 }
             }
         }
-        // Si le joueur a répondu oui
-        if (reponse) {
-            J.setPoints(J.getPoints() - cout);
-            //Affichage au milieu de la carte de la propriété png
-            sf::Texture texture;
-            if (!texture.loadFromFile("test.png")) {
-                std::cerr << "Erreur lors du chargement de la texture" << std::endl;
+        // Si on clique sur la croix rouge
+        if (event.type == sf::Event::MouseButtonPressed) {
+            if (event.mouseButton.button == sf::Mouse::Left) {
+                if (croix1.getGlobalBounds().contains(event.mouseButton.x, event.mouseButton.y)) {
+                    reponse = false;
+                    return;  // Sortir de la fonction
+                }
             }
-            sf::Sprite sprite;
-            sprite.setTexture(texture);
-            sprite.setOrigin(texture.getSize().x / 2.0f, texture.getSize().y / 2.0f);
-            sprite.setPosition(window.getSize().x / 2.0f, window.getSize().y / 2.0f);
-            window.draw(sprite);
-            window.display();
-            sf::sleep(sf::seconds(2));
         }
     }
+}
 
+    }
 }
 
 private:
