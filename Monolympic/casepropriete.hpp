@@ -98,7 +98,7 @@ while (!reponse) {
                             
                     // Affichage au milieu de la carte de la propriété png
                     sf::Texture texture;
-                    if (!texture.loadFromFile("test.png")) {
+                    if (!texture.loadFromFile("assets/ppt/p" + std::to_string(getPosition()) + ".png")) {
                         std::cerr << "Erreur lors du chargement de la texture" << std::endl;
                     }
                     sf::Sprite sprite;
