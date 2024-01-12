@@ -303,7 +303,7 @@ if (gameStarted) {
 
     std::vector<sf::Sprite> diceSprites;
     sf::Texture texture;
-    if (!texture.loadFromFile("board.png")) {
+    if (!texture.loadFromFile("assets/board.png")) {
         std::cout << "Erreur lors du chargement de l'image du dé." << std::endl;
     }
     sf::RenderWindow window(sf::VideoMode(1280, 720), "Plateau de jeu");

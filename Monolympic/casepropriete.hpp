@@ -35,42 +35,54 @@ void action(Joueur& J, sf::RenderWindow& window) const override {
             std::cerr << "Erreur lors du chargement de la police" << std::endl;
         }
 
-        sf::Text message;
-        message.setFont(font);
-        message.setString("Vous allez vous deplacer sur une case propriete. Voulez-vous l'acheter pour " + std::to_string(cout) + " medailles ?");
-        message.setCharacterSize(24);
-        message.setFillColor(sf::Color::White);
 
-        // Centrer le texte sur la fenêtre
-        sf::FloatRect textRect = message.getLocalBounds();
-        message.setOrigin(textRect.left + textRect.width / 2.0f,
-                          textRect.top + textRect.height / 2.0f);
-        message.setPosition(window.getSize().x / 2.0f, window.getSize().y / 2.0f);
+        //Bouton acheter et annuler
+        // Chargement de l'image "acheter.png"
+       sf::Texture acheterTexture;
+        if (!acheterTexture.loadFromFile("assets/acheter.png")) {
+            std::cerr << "Erreur lors du chargement de la texture pour l'image acheter" << std::endl;
+        }
+        sf::Sprite acheterSprite;
+        acheterSprite.setTexture(acheterTexture);
+        acheterSprite.setOrigin(acheterSprite.getLocalBounds().width / 2.0f, acheterSprite.getLocalBounds().height / 2.0f);
+        acheterSprite.setPosition(560, 453);  // Position spécifiée pour "acheterSprite"
 
-        // Fond
-        sf::RectangleShape fond(sf::Vector2f(textRect.width + 20, textRect.height + 20));
-        fond.setFillColor(sf::Color(0, 0, 0, 150));
-        fond.setOrigin(fond.getSize().x / 2.0f, fond.getSize().y / 2.0f);
-        fond.setPosition(window.getSize().x / 2.0f, window.getSize().y / 2.0f);
+        // Chargement de l'image "annuler.png"
+        sf::Texture annulerTexture;
+        if (!annulerTexture.loadFromFile("assets/annuler.png")) {
+            std::cerr << "Erreur lors du chargement de la texture pour l'image annuler" << std::endl;
+        }
+        sf::Sprite annulerSprite;
+        annulerSprite.setTexture(annulerTexture);
+        annulerSprite.setOrigin(annulerSprite.getLocalBounds().width / 2.0f, annulerSprite.getLocalBounds().height / 2.0f);
+        annulerSprite.setPosition(670, 453);  // Position spécifiée pour "annulerSprite"
 
-        // croix rouge pour non
-        sf::RectangleShape croix1(sf::Vector2f(20, 20));
-        croix1.setFillColor(sf::Color::Red);
-        croix1.setOrigin(croix1.getSize().x / 2.0f, croix1.getSize().y / 2.0f);
-        croix1.setPosition(window.getSize().x / 2.0f + textRect.width / 2.0f + 10, window.getSize().y / 2.0f - textRect.height / 2.0f - 10);
 
-        // cercle vert pour oui
-        sf::CircleShape cercle1(10);
-        cercle1.setFillColor(sf::Color::Green);
-        cercle1.setOrigin(cercle1.getRadius(), cercle1.getRadius());
-        cercle1.setPosition(window.getSize().x / 2.0f - textRect.width / 2.0f - 10, window.getSize().y / 2.0f - textRect.height / 2.0f - 10);
+        sf::Texture modalTexture;
+        if (!modalTexture.loadFromFile("assets/modalproprietenew.png")) {
+            std::cerr << "Erreur lors du chargement de la texture pour l'image modale" << std::endl;
+        }
+        
+        sf::Sprite modalSprite;
+        modalSprite.setTexture(modalTexture);
+        modalSprite.setPosition(450, 160);  // Position spécifiée
+
+        // Affichage du texte à la position spécifiée
+        sf::Text coutText;
+        coutText.setFont(font);
+        coutText.setString(std::to_string(cout));
+        coutText.setCharacterSize(10);
+        coutText.setFillColor(sf::Color::Black);
+        coutText.setPosition(645, 403);  // Position spécifiée
+
 
         // Affichage
-        window.draw(fond);
-        window.draw(message);
-        window.draw(croix1);
-        window.draw(cercle1);
-        window.display(); 
+        window.draw(modalSprite);
+        window.draw(coutText);
+        window.draw(annulerSprite); 
+        window.draw(acheterSprite);  
+        window.display();
+
 
         // Boucle pour attendre la réponse du joueur
        // Boucle pour attendre la réponse du joueur
@@ -86,7 +98,7 @@ while (!reponse) {
         // Si on clique sur le cercle vert
         if (event.type == sf::Event::MouseButtonPressed) {
             if (event.mouseButton.button == sf::Mouse::Left) {
-                if (cercle1.getGlobalBounds().contains(event.mouseButton.x, event.mouseButton.y)) {
+                if (acheterSprite.getGlobalBounds().contains(event.mouseButton.x, event.mouseButton.y)) {
                     reponse = true;
                     J.setPoints(J.getPoints() - cout);
                     // dire que l'état de la case à la position est acheté
@@ -114,7 +126,7 @@ while (!reponse) {
         // Si on clique sur la croix rouge
         if (event.type == sf::Event::MouseButtonPressed) {
             if (event.mouseButton.button == sf::Mouse::Left) {
-                if (croix1.getGlobalBounds().contains(event.mouseButton.x, event.mouseButton.y)) {
+                if (annulerSprite.getGlobalBounds().contains(event.mouseButton.x, event.mouseButton.y)) {
                     reponse = false;
                     return;  // Sortir de la fonction
                 }
