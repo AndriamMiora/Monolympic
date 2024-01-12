@@ -26,7 +26,6 @@ public:
         estAchete = _estAchete;
     }
     // Méthode pour effectuer l'action de la case à une position donnée
-   // Méthode pour effectuer l'action de la case à une position donnée
 void action(Joueur& J, sf::RenderWindow& window) const override {
     if (J.getPoints() >= cout && !estAchete) {
         // Affichage d'un message au milieu avec fond

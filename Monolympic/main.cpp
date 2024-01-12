@@ -61,7 +61,7 @@ int main(){
     newGameButton.setPosition(sf::Vector2f(480.0f, 210.0f));
 
     bool gameStarted = false;
-
+    string playerName = "";
     while (!gameStarted) {
         sf::Event evt;
         while (window.pollEvent(evt)) {
@@ -123,8 +123,6 @@ int main(){
     nameInputText.setPosition(sf::Vector2f(centerX, centerY));
 
 
-
-
     // Ajout bouton pour valider le nom du joueur
     sf::Texture validatetexture;
     validatetexture.loadFromFile("assets/valider.png");
@@ -135,7 +133,7 @@ int main(){
 
     if (gameStarted) {
         bool nameEntered = false;
-        string playerName = "";
+        
         while (!nameEntered) {
             sf::Event evt;
             while (window.pollEvent(evt)) {
@@ -169,6 +167,8 @@ int main(){
             window.display();
             
         }
+         // Récupérer le nom entré par l'utilisateur
+    playerName = nameInputText.getString();
     }
 
     // Créer un bouton pour entrer le nom du joueur avec une image
@@ -188,20 +188,20 @@ int main(){
     pion1texture.loadFromFile("assets/pion.png");
     sf::RectangleShape pion1(sf::Vector2f(50.0f, 50.0f));
     pion1.setTexture(&pion1texture);
-    pion1.setPosition(sf::Vector2f(550.0f, 440.0f));
+    pion1.setPosition(sf::Vector2f(580.0f, 440.0f));
 
     sf::Texture pion2texture;
     pion2texture.loadFromFile("assets/pion2.png");
     sf::RectangleShape pion2(sf::Vector2f(50.0f, 50.0f));
     pion2.setTexture(&pion2texture);
-    pion2.setPosition(sf::Vector2f(550.0f + 60.0f, 440.0f));  // Ajout de 60.0f pour décaler le deuxième pion
+    pion2.setPosition(sf::Vector2f(580.0f + 60.0f, 440.0f));  // Ajout de 60.0f pour décaler le deuxième pion
 
-    sf::Texture pion3texture;
+/*     sf::Texture pion3texture;
     pion3texture.loadFromFile("assets/pion3.png");
     sf::RectangleShape pion3(sf::Vector2f(50.0f, 50.0f));
     pion3.setTexture(&pion3texture);
     pion3.setPosition(sf::Vector2f(550.0f + 2 * 60.0f, 440.0f));  // Ajout de 2 * 60.0f pour décaler le troisième pion
-
+ */
 
    
 
@@ -226,10 +226,10 @@ if (gameStarted) {
                     pionSelected = true;
                     playerPion = "pion2";
                 }
-                if (pion3.getGlobalBounds().contains(mousePos)) {
+              /*   if (pion3.getGlobalBounds().contains(mousePos)) {
                     pionSelected = true;
                     playerPion = "pion3";
-                }
+                } */
                 
             }
         }
@@ -239,7 +239,7 @@ if (gameStarted) {
         window.draw(chooseImageSprite);
         window.draw(pion1);
         window.draw(pion2);
-        window.draw(pion3);
+        //window.draw(pion3);
 
         window.display();
     }
@@ -254,6 +254,24 @@ if (gameStarted) {
     // Création des joueurs
     Joueur* joueur2 = new Joueur(/* ... */);
     Joueur* joueur1 = new Joueur(/* ... */);
+
+    // Création des textes pour afficher les points de chaque joueur
+    sf::Text joueur1PointsText;
+    joueur1PointsText.setFont(stdFont);
+    joueur1PointsText.setCharacterSize(14);
+    joueur1PointsText.setFillColor(sf::Color::Black);
+    joueur1PointsText.setPosition(1070, 554);
+
+    // Affichage du nom du joueur 
+    sf::Text playerNameText;
+    playerNameText.setFont(stdFont);
+    playerNameText.setCharacterSize(24);
+    playerNameText.setFillColor(sf::Color::Black);
+    playerNameText.setPosition(1110, 279);
+    playerNameText.setString(playerName);
+
+
+
     
     // Initialisation du pion du joueur en bas à droite du plateau
     Pion pion("assets/pion.png",  sf::Vector2f(871.900024, 624.000000) );
@@ -303,13 +321,20 @@ if (gameStarted) {
 
     std::vector<sf::Sprite> diceSprites;
     sf::Texture texture;
-    if (!texture.loadFromFile("assets/board.png")) {
+    std::string boardImage = "assets/board1.png";  // Image par défaut pour le pion1
+    if (playerPion == "pion2") {
+        boardImage = "assets/board2.png";
+    }
+
+    if (!texture.loadFromFile(boardImage)) {
         std::cout << "Erreur lors du chargement de l'image du dé." << std::endl;
     }
+
     sf::RenderWindow window(sf::VideoMode(1280, 720), "Plateau de jeu");
     sf::Sprite sprite = sf::Sprite(texture);
     while (window.isOpen()) {
         sf::Event event;
+        joueur1PointsText.setString(std::to_string(joueur1->getPoints()));
         while (window.pollEvent(event)) {
             if (event.type == sf::Event::Closed) {
                 window.close();
@@ -338,6 +363,8 @@ if (gameStarted) {
 
         pion.afficher(window);
         rollButton.draw(window);
+        window.draw(joueur1PointsText); 
+        window.draw(playerNameText);
 
         window.display();
     }

@@ -13,7 +13,7 @@ public:
     CaseDepart(int _nbmedailles, int position) : Case(position), nbmedailles(_nbmedailles) {}
 
     // Constructeur par défaut
-    CaseDepart() : Case(0), nbmedailles(2000) {}
+    CaseDepart() : Case(0), nbmedailles(20) {}
     
     // Getter pour le nombre de médailles
 
