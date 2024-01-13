@@ -19,7 +19,7 @@ public:
 
     // plusieurs cases taxe avec des positions différentes
     
-    void action(Joueur& J, sf::RenderWindow& window) const override{
+     void action(Joueur& J, sf::RenderWindow& window, std::vector<sf::Vector2f> points) const override{
         std::cout << "Vous êtes sur une case de taxe. Vous devez payer " << montant << " médailles olympiques." << std::endl;
         if (J.getPoints() < montant) {
             std::cout << "Vous n'avez pas assez de médailles pour payer la taxe. Vous êtes éliminé." << std::endl;

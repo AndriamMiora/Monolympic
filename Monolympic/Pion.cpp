@@ -2,8 +2,8 @@
 # include <iostream>
 
 
-Pion::Pion(const std::string& cheminImage, sf::Vector2f position) 
-    : cheminImage(cheminImage), position(position) {
+Pion::Pion(const std::string& cheminImage, sf::Vector2f position, int pos)
+    : cheminImage(cheminImage), position(position) , pos(pos) {
     if (!texture.loadFromFile(cheminImage)) {
         // Gérer l'erreur de chargement de l'image
         std::cout << "Erreur lors du chargement de l'image du pion." << std::endl;
@@ -23,6 +23,7 @@ Pion::Pion(const std::string& cheminImage, sf::Vector2f position)
 
 void Pion::deplacerVers(sf::Vector2f nouvellePosition ) {
     sprite.setPosition(nouvellePosition);
+    position = nouvellePosition;
 }
 
 void Pion::afficher(sf::RenderWindow& window) {

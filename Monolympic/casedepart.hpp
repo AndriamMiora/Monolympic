@@ -20,7 +20,7 @@ public:
     int getNbMedailles() const { return nbmedailles; }
 
     // Implémentation de la fonction virtuelle pure
-    void action(Joueur& J, sf::RenderWindow& window) const override{
+    void action(Joueur& J, sf::RenderWindow& window, std::vector<sf::Vector2f> points) const override{
         std::cout << "Vous êtes sur la case Départ (position " << getPosition() << ") et vous gagnez " << getNbMedailles() << " médailles !" << std::endl;
         J.setPoints(J.getPoints() + getNbMedailles());
     }

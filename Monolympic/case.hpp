@@ -17,7 +17,7 @@ public:
     Case() = default;
 
     // Fonction virtuelle pure
-    virtual void action(Joueur& J, sf::RenderWindow& window) const = 0;
+    virtual void action(Joueur& J, sf::RenderWindow& window,std::vector<sf::Vector2f> points) const = 0;
 
  
     // Getter pour les coordonnées

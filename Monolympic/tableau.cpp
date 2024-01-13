@@ -100,18 +100,18 @@ sf::Sprite sprite;
 std::vector<sf::Texture> diceTextures;
 
 // Fonction pour initialiser les sprites des dés
-std::vector<sf::Sprite> Tableau::initializeDiceSprites(Des& des, sf::Vector2f buttonPosition, int& position, std::vector<sf::Vector2f> points, Joueur& joueur, sf::RenderWindow& window) {
+std::pair<std::vector<sf::Sprite>, int> Tableau::initializeDiceSprites(Des& des, sf::Vector2f buttonPosition, int& position, std::vector<sf::Vector2f> points, Joueur& joueur, sf::RenderWindow& window) {
     int de1 = des.lancerDe();
     int de2 = des.lancerDe();
     int sommeDes = de1 + de2;
-    if(position + sommeDes >= points.size()){
-        joueur.setPoints(joueur.getPoints() + 200);
-    }
-
     int nouvellePosition = (position + sommeDes) % points.size();
-   
     joueur.getPion()->deplacerVers(points[nouvellePosition]);
-    actionAtPosition(nouvellePosition, window);
+    // poser le pion sur la nouvelle position du joueur avant de faire l'action
+    joueur.getPion()->setPos(nouvellePosition);
+    if(position + sommeDes >= points.size()){
+        joueur.setPoints(joueur.getPoints() + 20);
+    }
+    
     position = nouvellePosition;
     std::vector<sf::Sprite> diceSprites;
     // Charger les images des dés en dehors de la boucle principale
@@ -146,7 +146,7 @@ std::vector<sf::Sprite> Tableau::initializeDiceSprites(Des& des, sf::Vector2f bu
 
         //std::cout << "Chemin de l'image du dé " << i << " : " << dicePaths[i] << std::endl;
     }
-    return diceSprites;
+     return std::make_pair(diceSprites, nouvellePosition);
 }
 
 

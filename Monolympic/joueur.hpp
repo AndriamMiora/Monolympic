@@ -22,7 +22,7 @@ public:
     Joueur(Pion* pion, int points, std::vector<int>casesAchetees) : pion(pion), points(points), casesAchetees(casesAchetees) {}
 
     // Constructeur par défaut
-    Joueur() : pion(nullptr), points(200), casesAchetees() {}
+    Joueur() : pion(nullptr), points(20), casesAchetees() {}
 
     // Getter pour le pion
     Pion* getPion() const {

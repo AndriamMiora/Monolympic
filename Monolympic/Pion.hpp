@@ -6,7 +6,7 @@
 
 class Pion {
 public:
-    Pion(const std::string& cheminImage, sf::Vector2f position);
+    Pion(const std::string& cheminImage, sf::Vector2f position, int pos);
     void deplacerVers(sf::Vector2f nouvellePosition);
     void afficher(sf::RenderWindow& window);
     
@@ -26,6 +26,14 @@ public:
         return cheminImage;
     }
 
+    int getPos() const {
+        return pos;
+    }
+
+    void setPos(int pos) {
+        this->pos = pos;
+    }
+
     void setCheminImage(const std::string& nouveauCheminImage) {
         cheminImage = nouveauCheminImage;
         if (!texture.loadFromFile(cheminImage)) {
@@ -38,6 +46,7 @@ public:
 
 private:
     sf::Vector2f position;
+    int pos;
     std::string cheminImage;  // Pas de référence constante ici
     sf::Texture texture;
     sf::Sprite sprite;

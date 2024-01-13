@@ -274,7 +274,7 @@ if (gameStarted) {
 
     
     // Initialisation du pion du joueur en bas à droite du plateau
-    Pion pion("assets/pion.png",  sf::Vector2f(871.900024, 624.000000) );
+    Pion pion("assets/pion.png",  sf::Vector2f(871.900024, 624.000000), 0);
     if (playerPion == "pion1") {
         pion.setCheminImage("assets/pion.png");
         joueur1->setPion(&pion);
@@ -332,42 +332,73 @@ if (gameStarted) {
 
     sf::RenderWindow window(sf::VideoMode(1280, 720), "Plateau de jeu");
     sf::Sprite sprite = sf::Sprite(texture);
-    while (window.isOpen()) {
-        sf::Event event;
-        joueur1PointsText.setString(std::to_string(joueur1->getPoints()));
-        while (window.pollEvent(event)) {
-            if (event.type == sf::Event::Closed) {
-                window.close();
+
+
+
+    
+   while (window.isOpen()) {
+    sf::Event event;
+    joueur1PointsText.setString(std::to_string(joueur1->getPoints()));
+
+    while (window.pollEvent(event)) {
+        if (event.type == sf::Event::Closed) {
+            window.close();
+        }
+
+        rollButton.handleEvent(event, window);
+
+        if (rollButton.isClicked()) {
+            // Lancer les dés et obtenir les résultats
+            auto result = tableau.initializeDiceSprites(des, rollButton.getPosition(), position, points, *joueur1, window);
+
+            diceSprites = result.first;
+            // Afficher les résultats des dés
+            window.clear();
+            window.draw(sprite);
+            for (size_t i = 0; i < diceSprites.size(); ++i) {
+                window.draw(diceSprites[i]);
             }
+           
 
-            rollButton.handleEvent(event, window);
+            pion.afficher(window);
+            rollButton.draw(window);
+            window.draw(joueur1PointsText); 
+            window.draw(playerNameText);
 
-            if (rollButton.isClicked()) {
-                diceSprites = tableau.initializeDiceSprites(des, rollButton.getPosition(), position, points, *joueur1, window);
-                rollButton.resetClicked();
-            }
+            window.display();
+
+            // Attendre un court moment pour afficher les dés avant de réaliser l'action
+            sf::sleep(sf::milliseconds(1000));  // Ajoutez le temps souhaité en millisecondes
+
+            position = result.second;
+            // Réaliser l'action après l'affichage des dés
+            tableau.actionAtPosition(position, window, points);
+
+            rollButton.resetClicked();
         }
-
-        window.clear();
-        window.draw(sprite);
-        for (size_t i = 0; i < diceSprites.size(); ++i) {
-            window.draw(diceSprites[i]);
-        }
-
-        for (size_t i = 0; i < points.size(); ++i) {
-            sf::CircleShape point(2.0f);
-            point.setPosition(points[i]);
-            point.setFillColor(sf::Color::Red);
-            window.draw(point);
-        }
-
-        pion.afficher(window);
-        rollButton.draw(window);
-        window.draw(joueur1PointsText); 
-        window.draw(playerNameText);
-
-        window.display();
     }
+
+    // Le reste du code reste inchangé
+    window.clear();
+    window.draw(sprite);
+    for (size_t i = 0; i < diceSprites.size(); ++i) {
+        window.draw(diceSprites[i]);
+    }
+   /*  for (size_t i = 0; i < points.size(); ++i) {
+        sf::CircleShape point(2.0f);
+        point.setPosition(points[i]);
+        point.setFillColor(sf::Color::Red);
+        window.draw(point);
+    } */
+
+    pion.afficher(window);
+    rollButton.draw(window);
+    window.draw(joueur1PointsText); 
+    window.draw(playerNameText);
+    window.display();
+}
+
+
 }
 
     return 0;

@@ -11,7 +11,7 @@ class CaseQuiz : public Case {
 public:
     CaseQuiz(int _position) : Case(_position) {}
 
-    void action(Joueur& J, sf::RenderWindow& window) const override{
+    void action(Joueur& J, sf::RenderWindow& window, std::vector<sf::Vector2f> points) const override{
         std::cout << "Vous êtes sur une case Quiz (position " << getPosition() << "). Posez une question." << std::endl;
     }
 };

@@ -26,7 +26,7 @@ public:
         estAchete = _estAchete;
     }
     // Méthode pour effectuer l'action de la case à une position donnée
-void action(Joueur& J, sf::RenderWindow& window) const override {
+ void action(Joueur& J, sf::RenderWindow& window, std::vector<sf::Vector2f> points) const override{
     if (J.getPoints() >= cout && !estAchete) {
         // Affichage d'un message au milieu avec fond
         sf::Font font;
@@ -85,42 +85,63 @@ void action(Joueur& J, sf::RenderWindow& window) const override {
 
         // Boucle pour attendre la réponse du joueur
        // Boucle pour attendre la réponse du joueur
-bool reponse = false;
-while (!reponse) {
-    sf::Event event;
-    while (window.pollEvent(event)) {
-        // Si on appuie sur la croix rouge
-        if (event.type == sf::Event::Closed) {
-            window.close();
-            return;  // Sortir de la fonction
-        }
-        // Si on clique sur le cercle vert
-        if (event.type == sf::Event::MouseButtonPressed) {
-            if (event.mouseButton.button == sf::Mouse::Left) {
-                if (acheterSprite.getGlobalBounds().contains(event.mouseButton.x, event.mouseButton.y)) {
-                    reponse = true;
-                    J.setPoints(J.getPoints() - cout);
-                    // dire que l'état de la case à la position est acheté
-                    setEtat(true);
-                    // ajouter la position de la case à la liste des cases achetées par le joueur
-                    std::vector<int> casesAchetees = J.getCasesAchetees();
-                            casesAchetees.push_back(getPosition());
-                            J.setCasesAchetees(casesAchetees);
-                            
-                    // Affichage au milieu de la carte de la propriété png
-                    sf::Texture texture;
-                    if (!texture.loadFromFile("assets/ppt/p" + std::to_string(getPosition()) + ".png")) {
-                        std::cerr << "Erreur lors du chargement de la texture" << std::endl;
-                    }
-                    sf::Sprite sprite;
-                    sprite.setTexture(texture);
-                    sprite.setOrigin(texture.getSize().x / 2.0f, texture.getSize().y / 2.0f);
-                    sprite.setPosition(window.getSize().x / 2.0f, window.getSize().y / 2.0f);
-                    window.draw(sprite);
-                    window.display();
-                    sf::sleep(sf::seconds(2));
+        bool reponse = false;
+        while (!reponse) {
+            sf::Event event;
+            while (window.pollEvent(event)) {
+                // Si on appuie sur la croix rouge
+                if (event.type == sf::Event::Closed) {
+                    window.close();
+                    return;  // Sortir de la fonction
                 }
-            }
+                // Si on clique sur le cercle vert
+                if (event.type == sf::Event::MouseButtonPressed) {
+                    if (event.mouseButton.button == sf::Mouse::Left) {
+                        if (acheterSprite.getGlobalBounds().contains(event.mouseButton.x, event.mouseButton.y)) {
+                            reponse = true;
+                            J.setPoints(J.getPoints() - cout);
+                            // dire que l'état de la case à la position est acheté
+                            setEtat(true);
+                            // ajouter la position de la case à la liste des cases achetées par le joueur
+                            std::vector<int> casesAchetees = J.getCasesAchetees();
+                                    casesAchetees.push_back(getPosition());
+                                    J.setCasesAchetees(casesAchetees);
+                                    
+                            // Affichage au milieu de la carte de la propriété png
+                            sf::Texture texture;
+                            if (!texture.loadFromFile("assets/ppt/p" + std::to_string(getPosition()) + ".png")) {
+                                std::cerr << "Erreur lors du chargement de la texture" << std::endl;
+                            }
+                            sf::Sprite sprite;
+                            sprite.setTexture(texture);
+                            sprite.setOrigin(texture.getSize().x / 2.0f, texture.getSize().y / 2.0f);
+                            sprite.setPosition(window.getSize().x / 2.0f, window.getSize().y / 2.0f);
+                           //agrandir la taille de la carte de la propriété
+                            sprite.setScale(1.5f, 1.5f);
+
+                            // ajouter image pion sur la case
+                            sf::Texture texturePion;
+                            if (!texturePion.loadFromFile(J.getPion()->getCheminImage())) {
+                                std::cerr << "Erreur lors du chargement de la texture" << std::endl;
+                            }
+                            sf::Sprite spritePion;
+                            spritePion.setTexture(texturePion);
+                            float facteurRedimensionnement = 0.05f; // Exemple : réduire la taille de moitié
+                            spritePion.setScale(facteurRedimensionnement, facteurRedimensionnement);
+                            spritePion.setPosition(J.getPion()->getPosition());
+
+                            window.draw(sprite);
+                            // attendre 2 secondes
+                             window.display();
+                            sf::sleep(sf::seconds(5));
+                           
+
+                            //window.draw(spritePion); // afficher marqueur sur la case achetée
+                            // pas être supprime après l'affichage
+
+                                                      
+                        }
+                    }
         }
         // Si on clique sur la croix rouge
         if (event.type == sf::Event::MouseButtonPressed) {
