@@ -358,7 +358,12 @@ if (gameStarted) {
             for (size_t i = 0; i < diceSprites.size(); ++i) {
                 window.draw(diceSprites[i]);
             }
-           
+            for (size_t i = 0; i < points.size(); ++i) {
+                sf::CircleShape point(2.0f);
+                point.setPosition(points[i]);
+                point.setFillColor(sf::Color::Red);
+                window.draw(point);
+            } 
 
             pion.afficher(window);
             rollButton.draw(window);
@@ -384,12 +389,12 @@ if (gameStarted) {
     for (size_t i = 0; i < diceSprites.size(); ++i) {
         window.draw(diceSprites[i]);
     }
-   /*  for (size_t i = 0; i < points.size(); ++i) {
+    for (size_t i = 0; i < points.size(); ++i) {
         sf::CircleShape point(2.0f);
         point.setPosition(points[i]);
         point.setFillColor(sf::Color::Red);
         window.draw(point);
-    } */
+    } 
 
     pion.afficher(window);
     rollButton.draw(window);
