@@ -17,7 +17,7 @@ public:
         //génère un nombre aléatoire entre 1 et 10
         int nombreAleatoire = rand() % 10 + 1;
         // load file 
-        std::string filename = "assets/chance/" + std::to_string(nombreAleatoire) + ".png";
+        std::string filename = "assets/chance/" + std::to_string(nombreAleatoire) + ".jpg";
         sf::Texture texture;
         if (!texture.loadFromFile(filename)) {
             std::cerr << "Erreur lors du chargement de l'image de la case chance" << std::endl;
@@ -26,7 +26,7 @@ public:
         sprite.setTexture(texture);
         sprite.setOrigin(texture.getSize().x / 2.0f, texture.getSize().y / 2.0f);
         sprite.setPosition(window.getSize().x / 2.0f, window.getSize().y / 2.0f);
-        sprite.setScale(2.0f, 2.0f);
+        sprite.setScale(1.0f, 1.0f);
         window.draw(sprite);
         window.display();
         sf::sleep(sf::seconds(5));

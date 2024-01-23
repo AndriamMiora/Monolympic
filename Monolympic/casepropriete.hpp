@@ -168,7 +168,7 @@ public:
                                     
                             // Affichage au milieu de la carte de la propriété png
                             sf::Texture texture;
-                            if (!texture.loadFromFile("assets/ppt/p" + std::to_string(getPosition()) + ".png")) {
+                            if (!texture.loadFromFile("assets/ppt/p" + std::to_string(getPosition()) + ".jpg")) {
                                 std::cerr << "Erreur lors du chargement de la texture" << std::endl;
                             }
                             sf::Sprite sprite;
@@ -176,7 +176,7 @@ public:
                             sprite.setOrigin(texture.getSize().x / 2.0f, texture.getSize().y / 2.0f);
                             sprite.setPosition(window.getSize().x / 2.0f, window.getSize().y / 2.0f);
                            //agrandir la taille de la carte de la propriété
-                            sprite.setScale(1.5f, 1.5f);
+                            
 
                             // ajouter image pion sur la case
                             sf::Texture texturePion;
