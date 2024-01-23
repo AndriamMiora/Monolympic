@@ -4,23 +4,82 @@
 #include <vector>
 #include "case.hpp"
 #include "joueur.hpp"
+#include "casepayante.hpp"
 #pragma once
 #include <vector>
 // Classe dérivée pour les cases propriété
-class CasePropriete : public Case {
-public:
-    CasePropriete(int _position, int _cout, bool _estAchete) : Case(_position), cout(_cout), estAchete(_estAchete) {}
+class CasePropriete : public CasePayante {
+private:
+    int nombreStades;
+    int nombrePiscines;
+    int nombreSalles;
+    int nombreMaxInstallations;
 
-    // Méthode pour get l'état de la case
+public:
+    CasePropriete(int _position, int _cout, bool _estAchete)
+        : CasePayante(_position, _cout, _estAchete),
+          nombreStades(0),
+          nombrePiscines(0),
+          nombreSalles(0),
+          nombreMaxInstallations(10) {} // Initialisation par défaut
+
+    // Méthode pour obtenir l'état de la case
     bool getEtat() const {
         return estAchete;
     }
 
-    // Méthode pour get le cout de la case
+    // Méthode pour obtenir le coût de la case
     int getCout() const {
         return cout;
     }
 
+    // Méthode pour obtenir le nombre de stades
+    int getNombreStades() const {
+        return nombreStades;
+    }
+
+    // Méthode pour obtenir le nombre de piscines
+    int getNombrePiscines() const {
+        return nombrePiscines;
+    }
+
+    // Méthode pour obtenir le nombre de salles
+    int getNombreSalles() const {
+        return nombreSalles;
+    }
+
+    // Méthode pour obtenir le nombre maximal d'installations
+    int getNombreMaxInstallations() const {
+        return nombreMaxInstallations;
+    }
+
+    // Méthode pour mettre à jour l'état de la case
+    void setEtat(bool _estAchete) {
+        estAchete = _estAchete;
+    }
+
+    // Méthode pour ajouter un stade
+    void ajouterStade() {
+        if (nombreStades < nombreMaxInstallations) {
+            ++nombreStades;
+        }
+    }
+
+    // Méthode pour ajouter une piscine
+    void ajouterPiscine() {
+        if (nombrePiscines < nombreMaxInstallations) {
+            ++nombrePiscines;
+        }
+    }
+
+    // Méthode pour ajouter une salle
+    void ajouterSalle() {
+        if (nombreSalles < nombreMaxInstallations) {
+            ++nombreSalles;
+        }
+    }
+
+    
     // Méthode pour set l'état de la case
     void setEtat(bool _estAchete) const {
         estAchete = _estAchete;
@@ -158,7 +217,4 @@ public:
     }
 }
 
-private:
-    int cout;
-     mutable bool estAchete;
 };

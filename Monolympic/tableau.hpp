@@ -14,6 +14,7 @@
 #include "caseservicepublic.hpp"
 #include "casetaxe.hpp"
 #include "joueur.hpp"
+#include "casepayante.hpp"
 #include <utility>
 #pragma once
 #include <vector>
@@ -96,7 +97,7 @@ public:
     }
 
     void addServiceCase(int position, const std::string& type) {
-        cases.push_back(new CaseServicePublic(position, type));
+        cases.push_back(new CaseServicePublic(position, 10, false, type));
     }
 
     void  addTaxCase(int position, int montant) {
