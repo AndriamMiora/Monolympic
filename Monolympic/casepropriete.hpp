@@ -15,8 +15,9 @@ private:
     int nombreSalles;
     int nombreMaxInstallations;
 
+
 public:
-    CasePropriete(int _position, int _cout, bool _estAchete)
+    CasePropriete(int _position, int _cout, bool _estAchete) 
         : CasePayante(_position, _cout, _estAchete),
           nombreStades(0),
           nombrePiscines(0),
@@ -48,6 +49,7 @@ public:
         return nombreSalles;
     }
 
+
     // Méthode pour obtenir le nombre maximal d'installations
     int getNombreMaxInstallations() const {
         return nombreMaxInstallations;
@@ -56,6 +58,11 @@ public:
     // Méthode pour mettre à jour l'état de la case
     void setEtat(bool _estAchete) {
         estAchete = _estAchete;
+    }
+
+    // Méthode pour mettre à jour le coût de la case
+    void setCout(int _cout, int stades, int piscines, int salles) {
+        cout = _cout + int(0.8 * 15 * stades + 0.5 * 10 * piscines + 0.25 * 5 * salles);
     }
 
     // Méthode pour ajouter un stade
@@ -86,14 +93,15 @@ public:
     }
     // Méthode pour effectuer l'action de la case à une position donnée
  void action(Joueur& J, sf::RenderWindow& window, std::vector<sf::Vector2f> points) const override{
+
+    // achete et pas parmis les cases achetées par le joueur (paye le loyer)    
+    // achete et parmis les cases achetées par le joueur (demande si veut installer)
     if (J.getPoints() >= cout && !estAchete) {
         // Affichage d'un message au milieu avec fond
         sf::Font font;
         if (!font.loadFromFile("police1.otf")) {
             std::cerr << "Erreur lors du chargement de la police" << std::endl;
         }
-
-
         //Bouton acheter et annuler
         // Chargement de l'image "acheter.png"
        sf::Texture acheterTexture;

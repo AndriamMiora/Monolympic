@@ -43,9 +43,9 @@ public:
 
     // Action à effectuer lorsqu'un joueur tombe sur la case
     void action(Joueur& J, sf::RenderWindow& window, std::vector<sf::Vector2f> points) const {
-        if (estAchete) {
+        if (estAchete) { // pas parmis les cases achetées par le joueur
             std::cout << "Vous êtes sur la case " << nomService << ". Vous devez payer " << cout << " médailles." << std::endl;
-            J.setPoints(J.getPoints() - cout);
+            J.setPoints(J.getPoints() - cout); // cas ou plus d'argent
         } else {
             if (J.getPoints() >= cout && !estAchete) {
         // Affichage d'un message au milieu avec fond

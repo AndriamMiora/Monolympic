@@ -22,6 +22,7 @@ public:
         if (!texture.loadFromFile(filename)) {
             std::cerr << "Erreur lors du chargement de l'image de la case chance" << std::endl;
         }
+    
         sf::Sprite sprite;
         sprite.setTexture(texture);
         sprite.setOrigin(texture.getSize().x / 2.0f, texture.getSize().y / 2.0f);
@@ -41,8 +42,7 @@ public:
 
         switch (nombreAleatoire) {
             case 1:
-                // Si J.fermetureville == true
-                // J.fermetureville = false
+                J.setCarteOuvertureVille(true);
                 break;
             case 2:
                 // Se rendre à Concorde
@@ -71,7 +71,7 @@ public:
 
                 break;
             case 5:
-                // Dispensez d'un quiz
+                J.setCarteDispenseQuiz(true);
                 break;
             case 6:
                 // -20 points
