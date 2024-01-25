@@ -8,6 +8,7 @@ Des::Des() {
 
 int Des::lancerDe() {
     // Générer un nombre aléatoire entre 1 et 6
+    // rand time null : pour que le nombre aléatoire change à chaque fois
     return (std::rand() % 6) + 1;
 }
 

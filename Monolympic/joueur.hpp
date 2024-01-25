@@ -6,7 +6,7 @@
 
 class Joueur {
 
-private:
+protected:
     // Pion du joueur
     Pion* pion;
 
@@ -22,19 +22,28 @@ private:
 
     mutable bool fermerVille = false;
 
+    mutable bool isBot = false;
+
 public:
 
     // Constructeur avec initialisation du pion
-    Joueur(Pion* pion, int points, std::vector<int>casesAchetees) : pion(pion), points(points), casesAchetees(casesAchetees) , acarteouvertureville(false), acartedispensequiz(false) , fermerVille(false) {}
+    Joueur(Pion* pion, int points, std::vector<int>casesAchetees, bool _bot) : pion(pion), points(points), casesAchetees(casesAchetees) , acarteouvertureville(false), acartedispensequiz(false) , fermerVille(false) , isBot(_bot) {}
 
     // Constructeur par défaut
-    Joueur() : pion(nullptr), points(20), casesAchetees() {}
+    Joueur() : pion(nullptr), points(20), casesAchetees() , acarteouvertureville(false), acartedispensequiz(false) , fermerVille(false) , isBot(false) {}
 
     // Getter pour le pion
     Pion* getPion() const {
         return pion;
     }
 
+    // Getter pour le bot
+    bool getBot() const {
+        return isBot;
+    }
+    void setBot(bool _bot) {
+        isBot = _bot;
+    }
     // Getter pour les points
     int getPoints() const {
         return points;
@@ -62,7 +71,7 @@ public:
     void setFermerVille(bool fermerVille) {
         this->fermerVille = fermerVille;
     }
-    
+
     // Setter pour la carte dispense quiz
     void setCarteDispenseQuiz(bool acartedispensequiz) {
         this->acartedispensequiz = acartedispensequiz;

@@ -171,9 +171,12 @@ public:
                             setEtat(true);
                             // ajouter la position de la case à la liste des cases achetées par le joueur
                             std::vector<int> casesAchetees = J.getCasesAchetees();
-                                    casesAchetees.push_back(getPosition());
-                                    J.setCasesAchetees(casesAchetees);
-                                    
+                            casesAchetees.push_back(getPosition());
+                            J.setCasesAchetees(casesAchetees);
+                            // print la liste des cases achetées par le joueur
+                            
+
+
                             // Affichage au milieu de la carte de la propriété png
                             sf::Texture texture;
                             if (!texture.loadFromFile("assets/ppt/p" + std::to_string(getPosition()) + ".jpg")) {

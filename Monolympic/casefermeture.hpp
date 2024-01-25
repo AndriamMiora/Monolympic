@@ -44,6 +44,17 @@ public:
             sprite.setOrigin(texture.getSize().x / 2.0f, texture.getSize().y / 2.0f);
             sprite.setPosition(window.getSize().x / 2.0f, window.getSize().y / 2.0f);
             sprite.setScale(1.0f, 1.0f);
+
+
+         // Charger la texture du fond
+    sf::Texture fondTexture;
+    fondTexture.loadFromFile("assets/background.png");
+
+    // Créer le sprite pour le fond
+    sf::Sprite fondSprite;
+    fondSprite.setTexture(fondTexture);
+    fondSprite.setScale(1.0f, 1.0f);
+
         // Charger la texture de l'image "continuer.png"
         sf::Texture continuerTexture;
         if (!continuerTexture.loadFromFile("assets/continuer2.png")) {
@@ -56,44 +67,54 @@ public:
         continuerSprite.setPosition(650, 585);  // Position spécifiée pour "continuerSprite"
         continuerSprite.setScale(0.2f, 0.2f);
 
+        // Afficher les sprites
+        window.draw(fondSprite);
         window.draw(sprite);
         window.draw(continuerSprite);
         window.display();
 
-        // Boucle d'affichage
-        while (window.isOpen()) {
-        // Gérer les événements
-        sf::Event event;
-        while (window.pollEvent(event)) {
-            if (event.type == sf::Event::Closed) {
+        // Gérer le clic sur le bouton "continuer" si on est un bot
+        if (J.getBot() == true) {
+            sf::sleep(sf::milliseconds(1000));  // Vous pouvez ajuster le délai si nécessaire               
+            }
+        else {
+             // Boucle d'affichage
+            while (window.isOpen()) {
+            // Gérer les événements
+            sf::Event event;
+            while (window.pollEvent(event)) {
+                if (event.type == sf::Event::Closed) {
                 window.close();
                 return;  // Sortir de la fonction
-            }
-            if (event.type == sf::Event::MouseButtonPressed && event.mouseButton.button == sf::Mouse::Left) {
-                if (continuerSprite.getGlobalBounds().contains(event.mouseButton.x, event.mouseButton.y)) {
-                    // Gérer le clic sur le bouton "continuer"
-                    // Afficher les sprites
-                    window.draw(continuerSprite);
-                    // Afficher la fenêtre
-                    window.display();
-                    // Attendre un court instant pour éviter le clic immédiat sur "continuer" dans la nouvelle fenêtre
-                    sf::sleep(sf::milliseconds(1000));  // Vous pouvez ajuster le délai si nécessaire
-                    return;  // Sortir de la fonction
+                }
+                    if (event.type == sf::Event::MouseButtonPressed && event.mouseButton.button == sf::Mouse::Left) {
+                        if (continuerSprite.getGlobalBounds().contains(event.mouseButton.x, event.mouseButton.y)) {
+                            // Gérer le clic sur le bouton "continuer"
+                            // Afficher les sprites
+                            window.draw(continuerSprite);
+                            // Afficher la fenêtre
+                            window.display();
+                            // Attendre un court instant pour éviter le clic immédiat sur "continuer" dans la nouvelle fenêtre
+                            sf::sleep(sf::milliseconds(1000));  // Vous pouvez ajuster le délai si nécessaire
+                            return;  // Sortir de la fonction
                 }
             }
-        }
+            
+        
 
         // Effacer le contenu de la fenêtre
         window.clear();
 
         // Afficher les sprites
+        window.draw(fondSprite);
         window.draw(sprite);
         window.draw(continuerSprite);
-
+    
         // Afficher la fenêtre
         window.display();
-    }
+            }
+        }
 
-
+        }
     }
 };

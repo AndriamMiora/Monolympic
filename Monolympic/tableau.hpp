@@ -70,7 +70,7 @@ public:
 
     std::vector<sf::Vector2f> getPoints();
 
-    std::pair<std::vector<sf::Sprite>, int>initializeDiceSprites(Des& des, sf::Vector2f buttonPosition, int& position, std::vector<sf::Vector2f> points, Joueur& joueur, sf::RenderWindow& window);
+    std::pair<std::vector<sf::Sprite>, int>initializeDiceSprites(Des& des, sf::Vector2f buttonPosition, int& position, std::vector<sf::Vector2f> points, Joueur* joueur, sf::RenderWindow& window);
     // Méthodes pour ajouter des instances spécifiques de cases en fonction de leur type
    void addChanceCase(int position) {
         cases.push_back(new CaseChance(position));
@@ -115,14 +115,14 @@ public:
     }
 
     // Méthode pour effectuer l'action de la case à une position donnée
-    void actionAtPosition(int& pos, sf ::RenderWindow& window, std::vector<sf::Vector2f> points) {
+    void actionAtPosition(int& pos, sf ::RenderWindow& window, std::vector<sf::Vector2f> points, Joueur* joueur) {
         Case* c = getCaseAtPosition(pos);
         if (c != nullptr) {
             // afficher pion jour 
-            joueurs[0]->getPion()->afficher(window);
-            c->action( *joueurs[0] , window, points);
-            pos = joueurs[0]->getPion()->getPos();
-            std::cout << "nombre de médailles : " << joueurs[0]->getPoints() << std::endl;
+            joueur->getPion()->afficher(window);
+            c->action( *joueur , window, points);
+            pos = joueur->getPion()->getPos();
+            std::cout << "nombre de médailles : " << joueur->getPoints() << std::endl;
         } else {
             std::cout << "Aucune case à la position " << pos << "." << std::endl;
         }
@@ -151,5 +151,4 @@ public:
         joueur->setPoints(points);
     }
 
-    
 };
