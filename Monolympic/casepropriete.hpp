@@ -95,7 +95,7 @@ void actionbot (Joueur& J, sf::RenderWindow& window, std::vector<sf::Vector2f> p
     // dem
 }
     // Méthode pour effectuer l'action de la case à une position donnée
- void action(Joueur& J, sf::RenderWindow& window, std::vector<sf::Vector2f> points) const override{}
+ void action(Joueur& J, sf::RenderWindow& window, std::vector<sf::Vector2f> points) const override{
 
     // achete et pas parmis les cases achetées par le joueur (paye le loyer)    
     // achete et parmis les cases achetées par le joueur (demande si veut installer)
