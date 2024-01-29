@@ -18,12 +18,13 @@
 #include <utility>
 #pragma once
 #include <vector>
+#include <list>
+
 
 class Tableau {
     private:
     std::vector<Case*> cases; // Utilisez un vecteur de pointeurs de la classe de base
-    std::vector<Joueur*> joueurs; // Utilisez un vecteur de pointeurs de la classe de base
-
+    std::list<Joueur*> joueurs; // Utilisez une liste pour les joueurs
 public:
     Tableau() {
         ajouterCaseDepart(0, 0);
@@ -133,16 +134,20 @@ public:
     }
 
     // Méthode pour récupérer tous les joueurs
-    std::vector<Joueur*> getJoueurs() const {
+    std::list<Joueur*> getJoueurs() const {
         return joueurs;
     }
 
     // Méthode pour récupérer un joueur par son index dans le vecteur
     Joueur* getJoueurAtIndex(int index) const {
-        if (index >= 0 && index < joueurs.size()) {
-            return joueurs[index];
+        int i = 0;
+        for (Joueur* j : joueurs) {
+            if (i == index) {
+                return j;
+            }
+            ++i;
         }
-        return nullptr; // Index invalide
+        return nullptr;
     }
 
     // Méthode pour mettre à jour le pion et les points d'un joueur

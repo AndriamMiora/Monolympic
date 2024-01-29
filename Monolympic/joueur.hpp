@@ -6,7 +6,7 @@
 
 class Joueur {
 
-protected:
+private:
     // Pion du joueur
     Pion* pion;
 
@@ -96,8 +96,23 @@ public:
     void setCasesAchetees(std::vector<int> casesAchetees) {
         this->casesAchetees = casesAchetees;
     }
+    // surcharge de l'opérateur ==
+bool operator==(const Joueur& joueur) const {
+    return (this->getPoints() == joueur.getPoints());
+}
 
-    
+// surcharge de l'opérateur <
+bool operator<(const Joueur& joueur) const {
+    return (this->getPoints() < joueur.getPoints());
+}
+
+// surcharge de l'opérateur >
+bool operator>(const Joueur& joueur) const {
+    // Utilisez l'opérateur < pour la comparaison, il n'est pas nécessaire de redéfinir l'opérateur >
+    return joueur < *this;
+}
+
+
     // Destructeur
     ~Joueur() {
         // Libérer la mémoire du pion si nécessaire

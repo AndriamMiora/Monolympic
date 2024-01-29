@@ -90,10 +90,6 @@ public:
     void setEtat(bool _estAchete) const {
         estAchete = _estAchete;
     }
-
-void actionbot (Joueur& J, sf::RenderWindow& window, std::vector<sf::Vector2f> points, int nombre1, int nombre2) const override{
-    // dem
-}
     // Méthode pour effectuer l'action de la case à une position donnée
  void action(Joueur& J, sf::RenderWindow& window, std::vector<sf::Vector2f> points) const override{
 

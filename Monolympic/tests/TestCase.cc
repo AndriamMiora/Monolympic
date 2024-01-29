@@ -109,7 +109,9 @@ TEST_SUITE("Create Tableau") {
     CHECK(t->getJoueurs().size() == 2);
     CHECK(t->getJoueurAtIndex(0)->getPoints() == 30);
     CHECK(t->getJoueurAtIndex(1)->getPoints() == 20);
-    
+    CHECK((j==j2) == false);
+    CHECK((j<j2) == true);
+    CHECK((j>j2) == false);
 
 }
 
