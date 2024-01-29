@@ -1,6 +1,7 @@
 CXX = g++
 CXXFLAGS = -std=c++11
-LIBS = -lsfml-graphics -lsfml-window -lsfml-system
+LIBS = -lsfml-graphics -lsfml-window -lsfml-system -lsfml-audio
+
 
 all: mon_programme
 

@@ -5,62 +5,10 @@
 
 // fonction de get points
 std::vector<sf::Vector2f> Tableau::getPoints() {
-sf::Texture texture;
-sf::RenderWindow window(sf::VideoMode(1280, 720), "Plateau de jeu");
+   auto [positions, caseNormaleSize, caseNormaleRotateSize, caseDepartSize, positionDepartDroite, positionDepartGauche, 
+  positionDepartGaucheTop,positionDepartDroiteTop] = initializePositions();
 
-sf::Sprite sprite;
-
-   if (!texture.loadFromFile("board.png")) {
-        std::cerr << "Erreur lors du chargement de l'image du plateau" << std::endl;
-    }
-
-    sprite.setTexture(texture);
-
-    sf::Vector2i caseNormaleSize(49, 84);
-    sf::Vector2i caseNormaleRotateSize(84, 49);
-    sf::Vector2i caseDepartSize(85, 84);
-
-    float offsetY = -138.0f;
-    float offsetYTop = 57.0f;
-
-    float basImage = static_cast<float>(texture.getSize().y);
-    float hautImage = 0.0f;
-
-    std::vector<sf::Vector2f> positions;
     std::vector<sf::Vector2f> points;
-
-    sf::Vector2f positionDepartGauche(310.0f, basImage + offsetY);
-    sf::Vector2f positionDepartDroite(positionDepartGauche.x + 10.6 * caseNormaleSize.x, positionDepartGauche.y);
-
-    positions.push_back(positionDepartDroite);
-
-    for (int i = 0; i < 9; ++i) {
-        sf::Vector2f position(positionDepartDroite.x - caseNormaleSize.x * (i + 1), positionDepartDroite.y);
-        positions.push_back(position);
-    }
-
-    positions.push_back(positionDepartGauche);
-
-    for (int i = 0; i < 9; ++i) {
-        sf::Vector2f position(positionDepartGauche.x - caseNormaleRotateSize.x, positionDepartGauche.y - caseNormaleRotateSize.y * (i + 1));
-        positions.push_back(position);
-    }
-
-    sf::Vector2f positionDepartGaucheTop(positionDepartGauche.x, hautImage + offsetYTop);
-    positions.push_back(positionDepartGaucheTop);
-
-    for (int i = 0; i < 9; ++i) {
-        sf::Vector2f position(positionDepartGaucheTop.x + caseDepartSize.x + (caseNormaleSize.x * i), positionDepartGaucheTop.y);
-        positions.push_back(position);
-    }
-
-    sf::Vector2f positionDepartDroiteTop(positions.back().x + caseNormaleSize.x, positionDepartGaucheTop.y);
-    positions.push_back(positionDepartDroiteTop);
-
-    for (int i = 8; i >= 0; --i) {
-        sf::Vector2f position(positionDepartDroite.x + caseNormaleRotateSize.x, positionDepartDroite.y - caseNormaleRotateSize.y * (i + 1));
-        positions.push_back(position);
-    }
 
     for (size_t i = 0; i < positions.size(); ++i) {
         sf::RectangleShape caseShape;
@@ -82,12 +30,10 @@ sf::Sprite sprite;
         if (positions[i].x != positionDepartGauche.x - caseNormaleRotateSize.x) {
             point.setPosition(positions[i] + sf::Vector2f(caseShape.getSize().x / 2.0f, caseShape.getSize().y / 2.0f));
             points.push_back(point.getPosition());
-            //printf("Point : %zu (%f, %f)\n", i, point.getPosition().x, point.getPosition().y);
         } else {
             point.setPosition(positions[i] + sf::Vector2f(caseShape.getSize().x / 2.0f, caseShape.getSize().y / 2.0f));
             point.move(caseNormaleRotateSize.x, 0.0f);
             points.push_back(point.getPosition());
-            //printf("Point : %zu (%f, %f)\n", i, point.getPosition().x, point.getPosition().y);
         }
     }
     return points;
@@ -98,37 +44,25 @@ std::vector<sf::Texture> diceTextures;
 
 // Fonction pour initialiser les sprites des dés
 std::pair<std::vector<sf::Sprite>, int> Tableau::initializeDiceSprites(Des& des, sf::Vector2f buttonPosition, int& position, std::vector<sf::Vector2f> points, Joueur* joueur, sf::RenderWindow& window) {
-    int de1 = des.lancerDe();
-    int de2 = des.lancerDe();
+    int de1 = des.lancerDe(); int de2 = des.lancerDe();
     int sommeDes = de1 + de2;
     int nouvellePosition = (position + sommeDes) % points.size();
     joueur->getPion()->deplacerVers(points[nouvellePosition]);
-    // poser le pion sur la nouvelle position du joueur avant de faire l'action
     joueur->getPion()->setPos(nouvellePosition);
     if(position + sommeDes >= points.size()){
         joueur->setPoints(joueur->getPoints() + 20);
     }
-    
-    std::vector<sf::Sprite> diceSprites;
-    // Charger les images des dés en dehors de la boucle principale
-    std::vector<std::string> dicePaths = des.getDiceImages(de1, de2);
-    diceSprites.clear();  // Vide le vecteur des sprites des dés
-    diceTextures.clear();
-
-    float xOffset = 25.0f;
-    float yOffset = 110.0f;
+    std::vector<sf::Sprite> diceSprites; std::vector<std::string> dicePaths = des.getDiceImages(de1, de2);
+    diceSprites.clear(); diceTextures.clear();
+    float xOffset = 25.0f; float yOffset = 110.0f;
     float spaceBetweenDice = 20.0f;
     float verticalMargin = 5.0f;
     float diceScaleFactor = 0.5f;
-
-
     for (size_t i = 0; i < dicePaths.size(); ++i) {
         sf::Texture texture;
         if (texture.loadFromFile(dicePaths[i])) {
-            diceTextures.push_back(texture);
-        }
+            diceTextures.push_back(texture);}
     }
-
     for (size_t i = 0; i < dicePaths.size(); ++i) {
         if (diceTextures[i].loadFromFile(dicePaths[i])) {
             sf::Sprite diceSprite(diceTextures[i]);
@@ -138,11 +72,6 @@ std::pair<std::vector<sf::Sprite>, int> Tableau::initializeDiceSprites(Des& des,
             xOffset += diceSprite.getGlobalBounds().width + spaceBetweenDice;
         } else {
             std::cerr << "Erreur lors du chargement de l'image du dé " << i << std::endl;
-        }
-
-        //std::cout << "Chemin de l'image du dé " << i << " : " << dicePaths[i] << std::endl;
-    }
-     return std::make_pair(diceSprites, nouvellePosition);
-}
-
+        } }
+     return std::make_pair(diceSprites, nouvellePosition);}
 

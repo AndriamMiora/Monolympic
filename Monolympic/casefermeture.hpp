@@ -14,11 +14,9 @@ public:
 
     void action(Joueur& J, sf::RenderWindow& window, std::vector<sf::Vector2f> points) const override{
         sf :: Texture texture;
-
         if (J.getCarteOuvertureVille() == true) {
             J.setFermerVille(false);
             J.setCarteOuvertureVille(false);
-
             if (!texture.loadFromFile("assets/fermeture3.jpg")) {
                 std::cerr << "Erreur lors du chargement de l'image de la case quiz" << std::endl;
             }
@@ -26,7 +24,7 @@ public:
         else {
             if (J.getPoints() >= 20) {
                 J.setPoints(J.getPoints() - 20);
-                J.setFermerVille(true);
+                J.setFermerVille(false);
                 if (!texture.loadFromFile("assets/fermeture1.jpg")) {
                 std::cerr << "Erreur lors du chargement de l'image de la case quiz" << std::endl;
             }

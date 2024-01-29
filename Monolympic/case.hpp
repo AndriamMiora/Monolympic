@@ -18,7 +18,11 @@ public:
 
     // Fonction virtuelle pure
     virtual void action(Joueur& J, sf::RenderWindow& window,std::vector<sf::Vector2f> points) const = 0;
-
+    
+    // fonction virtuelle pas pure getCout
+    virtual int getCout() const {
+        return 0;
+    }
  
     // Getter pour les coordonnées
     int getPosition() const {

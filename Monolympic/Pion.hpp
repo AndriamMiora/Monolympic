@@ -7,6 +7,11 @@
 class Pion {
 public:
     Pion(const std::string& cheminImage, sf::Vector2f position, int pos);
+    Pion(){ 
+        position = sf::Vector2f(0,0);
+        pos = 0;
+        cheminImage = "images/pion.png";
+    }
     void deplacerVers(sf::Vector2f nouvellePosition);
     void afficher(sf::RenderWindow& window);
     

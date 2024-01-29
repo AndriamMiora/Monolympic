@@ -2,7 +2,6 @@
 #include <SFML/Graphics.hpp>
 #include <iostream>
 #include <vector>
-#include "case.hpp"
 #include "joueur.hpp"
 #include "casepayante.hpp"
 #pragma once
@@ -91,8 +90,12 @@ public:
     void setEtat(bool _estAchete) const {
         estAchete = _estAchete;
     }
+
+void actionbot (Joueur& J, sf::RenderWindow& window, std::vector<sf::Vector2f> points, int nombre1, int nombre2) const override{
+    // dem
+}
     // Méthode pour effectuer l'action de la case à une position donnée
- void action(Joueur& J, sf::RenderWindow& window, std::vector<sf::Vector2f> points) const override{
+ void action(Joueur& J, sf::RenderWindow& window, std::vector<sf::Vector2f> points) const override{}
 
     // achete et pas parmis les cases achetées par le joueur (paye le loyer)    
     // achete et parmis les cases achetées par le joueur (demande si veut installer)
@@ -102,8 +105,7 @@ public:
         if (!font.loadFromFile("police1.otf")) {
             std::cerr << "Erreur lors du chargement de la police" << std::endl;
         }
-        //Bouton acheter et annuler
-        // Chargement de l'image "acheter.png"
+        //Bouton acheter et annuler, Chargement de l'image "acheter.png"
        sf::Texture acheterTexture;
         if (!acheterTexture.loadFromFile("assets/acheter.png")) {
             std::cerr << "Erreur lors du chargement de la texture pour l'image acheter" << std::endl;
@@ -141,7 +143,6 @@ public:
         coutText.setFillColor(sf::Color::Black);
         coutText.setPosition(645, 403);  // Position spécifiée
 
-
         // Affichage
         window.draw(modalSprite);
         window.draw(coutText);
@@ -149,8 +150,6 @@ public:
         window.draw(acheterSprite);  
         window.display();
 
-
-        // Boucle pour attendre la réponse du joueur
        // Boucle pour attendre la réponse du joueur
         bool reponse = false;
         while (!reponse) {
@@ -218,6 +217,7 @@ public:
             if (event.mouseButton.button == sf::Mouse::Left) {
                 if (annulerSprite.getGlobalBounds().contains(event.mouseButton.x, event.mouseButton.y)) {
                     reponse = false;
+                    window.clear();
                     return;  // Sortir de la fonction
                 }
             }

@@ -151,4 +151,71 @@ public:
         joueur->setPoints(points);
     }
 
+sf::Vector2f placement(std::vector<sf::Vector2f>& positions, sf::Vector2f& positionDepartGauche, sf::Vector2f& positionDepartDroite, sf::Vector2i& caseNormaleSize, sf::Vector2i& caseNormaleRotateSize, sf::Vector2i& caseDepartSize, float& offsetY, float& offsetYTop, float& basImage, float& hautImage, sf::Texture& texture, sf::Sprite& sprite, sf::RenderWindow& window) {
+    positions.push_back(positionDepartDroite);
+
+    for (int i = 0; i < 9; ++i) {
+        sf::Vector2f position(positionDepartDroite.x - caseNormaleSize.x * (i + 1), positionDepartDroite.y);
+        positions.push_back(position);
+    }
+
+    positions.push_back(positionDepartGauche);
+
+    for (int i = 0; i < 9; ++i) {
+        sf::Vector2f position(positionDepartGauche.x - caseNormaleRotateSize.x, positionDepartGauche.y - caseNormaleRotateSize.y * (i + 1));
+        positions.push_back(position);
+    }
+
+    sf::Vector2f positionDepartGaucheTop(positionDepartGauche.x, hautImage + offsetYTop);
+    positions.push_back(positionDepartGaucheTop);
+
+    for (int i = 0; i < 9; ++i) {
+        sf::Vector2f position(positionDepartGaucheTop.x + caseDepartSize.x + (caseNormaleSize.x * i), positionDepartGaucheTop.y);
+        positions.push_back(position);
+    }
+
+    sf::Vector2f positionDepartDroiteTop(positions.back().x + caseNormaleSize.x, positionDepartGaucheTop.y);
+    positions.push_back(positionDepartDroiteTop);
+
+    for (int i = 8; i >= 0; --i) {
+        sf::Vector2f position(positionDepartDroite.x + caseNormaleRotateSize.x, positionDepartDroite.y - caseNormaleRotateSize.y * (i + 1));
+        positions.push_back(position);
+    }
+
+    return positionDepartDroiteTop ; 
+}
+
+
+std::tuple<std::vector<sf::Vector2f>, sf::Vector2i, sf::Vector2i, sf::Vector2i, sf::Vector2f, sf::Vector2f, sf::Vector2f, sf::Vector2f> initializePositions() {
+    sf::Texture texture;
+    sf::RenderWindow window(sf::VideoMode(1280, 720), "Plateau de jeu");
+    sf::Sprite sprite; 
+    texture.loadFromFile("board.png"); 
+    sprite.setTexture(texture);
+
+    sf::Vector2i caseNormaleSize(49, 84);
+    sf::Vector2i caseNormaleRotateSize(84, 49);
+    sf::Vector2i caseDepartSize(85, 84);
+
+    float offsetY = -138.0f;
+    float offsetYTop = 57.0f;
+
+    float basImage = static_cast<float>(texture.getSize().y);
+    float hautImage = 0.0f;
+
+    std::vector<sf::Vector2f> positions;
+
+    sf::Vector2f positionDepartGauche(310.0f, basImage + offsetY);
+    sf::Vector2f positionDepartDroite(positionDepartGauche.x + 10.6 * caseNormaleSize.x, positionDepartGauche.y);
+    sf::Vector2f positionDepartGaucheTop(positionDepartGauche.x, hautImage + offsetYTop);
+
+    sf::Vector2f positionDepartDroiteTop = placement(positions, positionDepartGauche, positionDepartDroite, 
+    caseNormaleSize, caseNormaleRotateSize, caseDepartSize, offsetY, offsetYTop, basImage, 
+    hautImage, texture, sprite, window);
+
+    return std::make_tuple(positions, caseNormaleSize, caseNormaleRotateSize, caseDepartSize, 
+    positionDepartDroite, positionDepartGauche, positionDepartGaucheTop,positionDepartDroiteTop);
+}
+
+
 };

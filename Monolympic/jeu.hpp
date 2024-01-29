@@ -14,7 +14,7 @@
 #include "BotJoueur.hpp"
 #include <SFML/System/Clock.hpp>
 #include "Affichage.hpp"
-
+#include <SFML/Audio.hpp>
 using namespace std;
 
 std::tuple<bool, std::string, std::string, sf::Font> setupGame(sf::RenderWindow& window) {
@@ -36,68 +36,36 @@ std::tuple<bool, std::string, std::string, sf::Font> setupGame(sf::RenderWindow&
 }
 
 void drawpion(sf::RenderWindow& window, Joueur* joueur1, Joueur* joueur2, const std::vector<sf::Vector2f>& points, const std::string& playerPion) {
-    // Load textures outside the loop
-    sf::Texture texture1;
-    sf::Texture texture2;
-
+    sf::Texture texture1, texture2; // Load textures outside the loop
     if (playerPion == "pion1") {
-        if (!texture1.loadFromFile("assets/couleur1.png")) {
-            std::cout << "Erreur lors du chargement de l'image du dé." << std::endl;
-            return;  // Exit the function if loading fails
-        }
-        if (!texture2.loadFromFile("assets/couleur2.png")) {
-            std::cout << "Erreur lors du chargement de l'image du dé." << std::endl;
-            return;  // Exit the function if loading fails
-        }
+        texture1.loadFromFile("assets/couleur1.png");
+        texture2.loadFromFile("assets/couleur2.png");
     } else if (playerPion == "pion2") {
-        if (!texture1.loadFromFile("assets/couleur2.png")) {
-            std::cout << "Erreur lors du chargement de l'image du dé." << std::endl;
-            return;  // Exit the function if loading fails
-        }
-        if (!texture2.loadFromFile("assets/couleur1.png")) {
-            std::cout << "Erreur lors du chargement de l'image du dé." << std::endl;
-            return;  // Exit the function if loading fails
-        }
+        texture1.loadFromFile("assets/couleur2.png");
+        texture2.loadFromFile("assets/couleur1.png");   
     }
-
     // Create sprites
-    std::vector<sf::Sprite> caseJoueur1(joueur1->getCasesAchetees().size());
-    std::vector<sf::Sprite> caseJoueur2(joueur2->getCasesAchetees().size());
-
-    // Define size reduction and horizontal offset
-    float sizeReduction = 0.3f;  // You can adjust this value
-    float xOffset = 5.0f;  // You can adjust this value
-
-    // Populate sprites
+    std::vector<sf::Sprite> caseJoueur1(joueur1->getCasesAchetees().size()), caseJoueur2(joueur2->getCasesAchetees().size());
     for (size_t i = 0; i < joueur1->getCasesAchetees().size(); ++i) {
         caseJoueur1[i].setTexture(texture1);
         caseJoueur1[i].setPosition(points[joueur1->getCasesAchetees()[i]]);
-        caseJoueur1[i].setScale(sizeReduction, sizeReduction);  // Apply size reduction
-        caseJoueur1[i].move(xOffset, 0.0f);  // Move to the right
+        caseJoueur1[i].setScale(0.3f, 0.3f);  // Apply size reduction
+        caseJoueur1[i].move(5.0f, 0.0f);  // Move to the right
     }
-
     for (size_t i = 0; i < joueur2->getCasesAchetees().size(); ++i) {
         caseJoueur2[i].setTexture(texture2);
         caseJoueur2[i].setPosition(points[joueur2->getCasesAchetees()[i]]);
-        caseJoueur2[i].setScale(sizeReduction, sizeReduction);  // Apply size reduction
-        caseJoueur2[i].move(xOffset, 0.0f);  // Move to the right
+        caseJoueur2[i].setScale(0.3f, 0.3f);  // Apply size reduction
+        caseJoueur2[i].move(5.0f, 0.0f);  // Move to the right
     }
-
-    // Draw sprites
-    for (const auto& sprite : caseJoueur1) {
+    for (const auto& sprite : caseJoueur1) {    // Draw sprites
         window.draw(sprite);
     }
-
-    for (const auto& sprite : caseJoueur2) {
+    for (const auto& sprite : caseJoueur2) {   // Draw sprites
         window.draw(sprite);
     }
-
     window.display();
 }
-
-
-
-
 
 void drawGameElements(sf::RenderWindow& window, Button& rollButton, sf::Sprite& sprite, Joueur* joueur1, Joueur* joueur2, std::vector<sf::Sprite>& diceSprites, sf::Text& joueur1PointsText, sf::Text& joueur2PointsText, sf::Text& playerNameText, sf::Sprite& tourSprite, sf::Text& timeText, std::vector<sf::Vector2f>& points, std::string playerPion) {
     window.draw(sprite);
@@ -117,179 +85,207 @@ void drawGameElements(sf::RenderWindow& window, Button& rollButton, sf::Sprite& 
     drawpion(window, joueur1, joueur2, points, playerPion);
     window.display();
 }
+void initializePionAndPlayer(Joueur* joueur, Pion& pion, const std::string& imagePath, float posX, float posY) {
+    pion.setCheminImage(imagePath);
+    joueur->setPion(&pion);
+}
+
+void initializePionAndPlayers(const std::string& playerPion, Joueur* joueur1, Joueur* joueur2, Pion& pion1, Pion& pion2, Tableau& tableau) {
+    if (playerPion == "pion1") {
+        initializePionAndPlayer(joueur1, pion1, "assets/pion.png", 871.9f, 624.0f);
+        initializePionAndPlayer(joueur2, pion2, "assets/pion2.png", 881.9f, 624.0f);
+    } else if (playerPion == "pion2") {
+        initializePionAndPlayer(joueur1, pion1, "assets/pion2.png", 871.9f, 624.0f);
+        initializePionAndPlayer(joueur2, pion2, "assets/pion.png", 881.9f, 624.0f);
+    }
+    tableau.addJoueur(joueur1);
+    tableau.addJoueur(joueur2);
+}
+
+void setupTimeText(sf::Text& timeText, const sf::Font& stdFont) {
+    timeText.setFont(stdFont);
+    timeText.setCharacterSize(24);
+    timeText.setFillColor(sf::Color::White);
+    timeText.setPosition(10.f, 10.f);  // Ajustez la position selon vos besoins
+}
 
 
-// début du jeu
-void beginGame() {
-    Affichage affichage;
-    sf::RenderWindow window(sf::VideoMode(1280, 720),
-    "by Andrianarivo Ashley & Andriambolo-nivo Miora",
-    sf::Style::Close | sf::Style::Titlebar); // Style de la fenêtre : Close = bouton fermer, Titlebar = barre de titre
-    auto result = setupGame(window);
-    bool gameStarted = std::get<0>(result);
-    std::string playerName = std::get<1>(result);
-    std::string playerPion = std::get<2>(result);
-    sf::Font stdFont = std::get<3>(result);
+void performTurn(Joueur* joueur, int& position, std::vector<sf::Vector2f>& points, sf::RenderWindow& window, Tableau& tableau, Button& rollButton, sf::Sprite& sprite, std::vector<sf::Sprite>& diceSprites, sf::Text& joueur1PointsText, sf::Text& joueur2PointsText, sf::Text& playerNameText, sf::Sprite& tourSprite, sf::Text& timeText, const std::string& playerPion, Des& des, Joueur* joueur1, Joueur* joueur2) {
+    window.clear();
+    auto result = tableau.initializeDiceSprites(des, rollButton.getPosition(), position, points, joueur, window);
+    diceSprites = result.first;
+    position = result.second;
+    joueur->getPion()->setPos(result.second);
+    joueur->getPion()->setPosition(points[result.second]);
+    window.clear();
+    drawGameElements(window, rollButton, sprite, joueur1, joueur2, diceSprites, joueur1PointsText, joueur2PointsText, playerNameText, tourSprite, timeText, points, playerPion);
+    rollButton.draw(window);
+    window.display();
+    sf::sleep(sf::milliseconds(1000));
+    tableau.actionAtPosition(position, window, points, joueur);
+    window.clear();
+    drawGameElements(window, rollButton, sprite, joueur1, joueur2, diceSprites, joueur1PointsText, joueur2PointsText, playerNameText, tourSprite, timeText, points, playerPion);
+    rollButton.draw(window);
+    window.display();
+    rollButton.resetClicked();
+}
+
+void updateTimerAndDisplay(sf::RenderWindow& window, sf::Clock& globalTimer, sf::Text& timeText) {
+    sf::Time elapsedTime = globalTimer.getElapsedTime();
+    int minutes = static_cast<int>(elapsedTime.asSeconds()) / 60;
+    int seconds = static_cast<int>(elapsedTime.asSeconds()) % 60;
+    timeText.setString("Temps restant : " + std::to_string(minutes) + " min " + std::to_string(seconds) + " sec");
+    window.draw(timeText);
+    window.display();
+}
+tuple<Joueur*, int, int > calculeScore(Joueur* joueur, Joueur* joueur2, Tableau& tableau) {
+    // caclule le nombre de médailles + couts des ppriétés que chaque joueur a
+    int medaillesJoueur1 = joueur->getPoints();
+    int medaillesJoueur2 = joueur2->getPoints();
+    int coutProprietesJoueur1 = 0;
+    int coutProprietesJoueur2 = 0;
     
-    Tableau tableau;
-    std::vector<sf::Vector2f> points = tableau.getPoints();
+    // joueur à la liste des positions des propriétés qu'il a
+    std::vector<int> positionsJoueur1 = joueur->getCasesAchetees();
+    std::vector<int> positionsJoueur2 = joueur2->getCasesAchetees();
+    // pour chaque position, on ajoute le cout de la propriété à la somme totale
+    for (int i = 0; i < positionsJoueur1.size(); ++i) {
+        coutProprietesJoueur1 += tableau.getCaseAtPosition(positionsJoueur1[i])->getCout();
+    }
+    for (int i = 0; i < positionsJoueur2.size(); ++i) {
+        coutProprietesJoueur2 += tableau.getCaseAtPosition(positionsJoueur2[i])->getCout();
+    }
+    // on calcule le score final de chaque joueur
+    int scoreJoueur1 = medaillesJoueur1 + coutProprietesJoueur1;
+    int scoreJoueur2 = medaillesJoueur2 + coutProprietesJoueur2;
+    
+    // retourne le joueur avec le score le plus élevé
+    if (scoreJoueur1 > scoreJoueur2) {
+        return make_tuple(joueur, scoreJoueur1 , scoreJoueur2);
+    } else if (scoreJoueur2 > scoreJoueur1) {
+        return make_tuple(joueur2, scoreJoueur2, scoreJoueur1);
+    } else {
+        return make_tuple(nullptr, scoreJoueur1, scoreJoueur2); // égalité
+    }
 
+}
+void endGame(sf::RenderWindow& window, Joueur* joueur1, Joueur* joueur2, Tableau& tableau) {
+    sf::Texture fondTexture; Affichage affichage;
+    fondTexture.loadFromFile("assets/background.png");
+    // Créer le sprite pour le fond
+    sf::Sprite fondSprite;
+    fondSprite.setTexture(fondTexture);
+    fondSprite.setScale(1.0f, 1.0f);
+    window.draw(fondSprite);
+
+    Joueur* gagnant = get<0>(calculeScore(joueur1, joueur2, tableau));
+    //int scoreGagnant = get<1>(calculeScore(joueur1, joueur2, tableau));
+    //int scorePerdant = get<2>(calculeScore(joueur1, joueur2, tableau));
+
+    sf::Texture texture;
+    if (gagnant == nullptr) {
+        texture.loadFromFile("assets/egalite.jpg");
+    } else {
+       if (gagnant == joueur1) {
+            texture.loadFromFile("assets/gagnant.jpg");
+       } else {
+            texture.loadFromFile("assets/perdant.jpg");
+       }
+    }
+    sf::Sprite Sprite;
+    Sprite.setTexture(texture);
+    affichage.Drawgagner(window, Sprite);
+    window.display();
+    sf::sleep(sf::seconds(5));
+}
+
+int comptetour(Joueur* joueur, int tour) {
+    int tourne = tour;
+    if (joueur->getFermerVille() == true) {
+                    if (tourne== 2){
+                        joueur->setFermerVille(false);
+                        tourne= 0;
+                    }
+                    else {
+                        tour++;
+                    }
+                }
+    return tourne; 
+}
+
+void runGameLoop(sf::RenderWindow& window, Joueur* joueur1, Joueur* joueur2, std::vector<sf::Vector2f>& points, Des& des, Button& rollButton, sf::Sprite& sprite, std::vector<sf::Sprite>& diceSprites, sf::Text& joueur1PointsText, sf::Text& joueur2PointsText, sf::Text& playerNameText, sf::Sprite& tourSprite, sf::Text& timeText, bool& joueur1Turn, sf::Clock& globalTimer, const sf::Time& timeLimit, const std::string& playerPion, Tableau& tableau) {
+    int position1 = 0, position2 = 0;
+    int tourjoueur = 0; int tourbot = 0;
+    while (window.isOpen() && globalTimer.getElapsedTime() < timeLimit) {
+        sf::Time elapsed = globalTimer.getElapsedTime(); sf::Event event;
+        joueur1PointsText.setString(std::to_string(joueur1->getPoints()));
+        joueur2PointsText.setString(std::to_string(joueur2->getPoints()));
+        while (window.pollEvent(event)) {
+            tourjoueur = comptetour(joueur1, tourjoueur); tourbot = comptetour(joueur2, tourbot);
+            if (event.type == sf::Event::Closed) {
+                window.close();
+            }
+            if (joueur1Turn && !rollButton.isClicked()) {
+                rollButton.handleEvent(event, window);
+            }
+            if (joueur1Turn && rollButton.isClicked() && joueur1->getFermerVille() == false) {
+                performTurn(joueur1, position1, points, window, tableau, rollButton, sprite, diceSprites, joueur1PointsText, joueur2PointsText, playerNameText, tourSprite, timeText, playerPion, des, joueur1, joueur2);
+                updateTimerAndDisplay(window, globalTimer, timeText);
+                joueur1Turn = false;
+                sf::sleep(sf::seconds(3));
+            } else if (!joueur1Turn && joueur2->getFermerVille() == false) {
+                performTurn(joueur2, position2, points, window, tableau, rollButton, sprite, diceSprites, joueur1PointsText, joueur2PointsText, playerNameText, tourSprite, timeText, playerPion, des, joueur1, joueur2);
+                updateTimerAndDisplay(window, globalTimer, timeText);
+                joueur1Turn = true;
+                window.draw(tourSprite); window.display();
+                sf::sleep(sf::seconds(2));
+            }
+        }
+        window.clear();
+        drawGameElements(window, rollButton, sprite, joueur1, joueur2, diceSprites, joueur1PointsText, joueur2PointsText, playerNameText, tourSprite, timeText, points, playerPion);
+        updateTimerAndDisplay(window, globalTimer, timeText);       
+    }  
+}
+
+
+
+void beginGame() {
+    sf::Music backgroundMusic;
+    backgroundMusic.openFromFile("assets/monopoly.mp3");
+    backgroundMusic.setVolume(50);
+    backgroundMusic.setLoop(true);
+    backgroundMusic.play();
+    Affichage affichage;
+    sf::RenderWindow window(sf::VideoMode(1280, 720), "by Andrianarivo Ashley & Andriambolo-nivo Miora", sf::Style::Close | sf::Style::Titlebar);
+    auto [gameStarted, playerName, playerPion, stdFont] = setupGame(window);
+    Tableau tableau; std::vector<sf::Vector2f> points = tableau.getPoints();
     Des des;
-    int position1 = 0;
-    int position2 = 0;
-
-    // Création des joueurs
-    Joueur* joueur1 = new Joueur(/* ... */);
-    Joueur* joueur2 = new Joueur(/* ... */);
-    joueur2->setBot(true);
-
-    // Création des textes pour afficher les points de chaque joueur
-    sf::Text joueur1PointsText;
+    Joueur *joueur1 = new Joueur(/* ... */), *joueur2 = new Joueur(/* ... */); joueur2->setBot(true);
+    sf::Text joueur1PointsText, joueur2PointsText, playerNameText;
     joueur1PointsText = affichage.createAndInitializeText(stdFont, 14, sf::Color::Black, sf::Vector2f(1084, 554), std::to_string(joueur1->getPoints()));
-    sf::Text joueur2PointsText;
-    joueur2PointsText = affichage.createAndInitializeText(stdFont, 14, sf::Color::Black, sf::Vector2f(100, 508) , std::to_string(joueur2->getPoints()));
-    // Affichage du nom du joueur 
-    sf::Text playerNameText;
+    joueur2PointsText = affichage.createAndInitializeText(stdFont, 14, sf::Color::Black, sf::Vector2f(100, 508), std::to_string(joueur2->getPoints()));
     playerNameText = affichage.createAndInitializeText(stdFont, 24, sf::Color::Black, sf::Vector2f(1110, 279), playerName);
-
-    sf::Texture tour;
-    tour.loadFromFile("assets/tour.jpg");
-    sf::Sprite tourSprite;
-    tourSprite.setTexture(tour);
+    sf::Texture tour; tour.loadFromFile("assets/tour.jpg"); sf::Sprite tourSprite(tour);
     tourSprite.setOrigin(tour.getSize().x / 2.0f, tour.getSize().y / 2.0f);
     tourSprite.setPosition(window.getSize().x / 2.0f, window.getSize().y / 2.0f);
     tourSprite.setScale(1.0f, 1.0f);
-   
-    // Initialisation du pion du joueur en bas à droite du plateau
-    Pion pion("assets/pion.png",  sf::Vector2f(871.900024, 624.000000), 0);
-    Pion pion2("assets/pion.png",  sf::Vector2f(881.900024, 624.000000), 0);
-    if (playerPion == "pion1") {
-        pion.setCheminImage("assets/pion.png");
-        joueur1->setPion(&pion);
-
-        pion2.setCheminImage("assets/pion2.png");
-        joueur2->setPion(&pion2);
-        tableau.addJoueur(joueur2);
-        
-    } else if (playerPion == "pion2") {
-        pion.setCheminImage("assets/pion2.png");
-        joueur1->setPion(&pion);
-        tableau.addJoueur(joueur1);
-
-        pion2.setCheminImage("assets/pion.png");
-        joueur2->setPion(&pion2);
-        tableau.addJoueur(joueur2);
-    } 
+    Pion pion1("assets/pion.png", sf::Vector2f(871.9f, 624.0f), 0), pion2("assets/pion.png", sf::Vector2f(881.9f, 624.0f), 0);
+    initializePionAndPlayers(playerPion, joueur1, joueur2, pion1, pion2, tableau);
     sf::Texture texture;
-    std::string boardImage = "assets/board1.png";  // Image par défaut pour le pion1
-    if (playerPion == "pion2") {
-        boardImage = "assets/board2.png";
-    }
-    texture.loadFromFile(boardImage);
-    sf::Sprite sprite = sf::Sprite(texture);
-
+    texture.loadFromFile((playerPion == "pion2") ? "assets/board2.png" : "assets/board1.png");
+    sf::Sprite sprite(texture);
     Button rollButton("assets/roll.png");
     float xPosition = rollButton.createRollButton("assets/roll.png", window).first;
     float yPosition = rollButton.createRollButton("assets/roll.png", window).second;
     rollButton.setPosition(sf::Vector2f(xPosition, yPosition));
     rollButton.setScale(sf::Vector2f(0.2f, 0.2f));  // Ajustement de la taille
-
     std::vector<sf::Sprite> diceSprites;
-
     bool joueur1Turn = true;
-
-    sf::Clock globalTimer;  // Horloge globale pour suivre le temps total écoulé
-    const sf::Time timeLimit = sf::seconds(600.0f);  // Limite de temps pour le jeu
-    sf::Text timeText = affichage.createAndInitializeTimeText(stdFont);
-
-
-
-   while (window.isOpen() && globalTimer.getElapsedTime() < timeLimit) {
-    sf::Time elapsed = globalTimer.getElapsedTime();
-    sf::Event event;
-    joueur1PointsText.setString(std::to_string(joueur1->getPoints()));
-    joueur2PointsText.setString(std::to_string(joueur2->getPoints()));
-
-    while (window.pollEvent(event)) {
-        if (event.type == sf::Event::Closed) {
-            window.close();
-        }
-        // Seul le joueur humain peut cliquer sur le bouton
-        if (joueur1Turn && !rollButton.isClicked()) {
-            rollButton.handleEvent(event, window);
-        }
-        if (joueur1Turn && rollButton.isClicked()) {
-            // Lancer les dés et obtenir les résultats
-            auto result1 = tableau.initializeDiceSprites(des, rollButton.getPosition(), position1, points, joueur1, window);
-            diceSprites = result1.first;
-            position1 = result1.second;
-
-            window.clear();
-            drawGameElements(window, rollButton, sprite, joueur1, joueur2, diceSprites, joueur1PointsText, joueur2PointsText, playerNameText, tourSprite, timeText, points, playerPion);
-            rollButton.draw(window);
-            window.display();
-            // Attendre un court moment pour afficher les dés avant de réaliser l'action
-            sf::sleep(sf::milliseconds(1000));  // Ajoutez le temps souhaité en millisecondes
-
-            // Réaliser l'action après l'affichage des dés
-            tableau.actionAtPosition(position1, window, points, joueur1);
-            window.clear();
-            drawGameElements(window, rollButton, sprite, joueur1, joueur2, diceSprites, joueur1PointsText, joueur2PointsText, playerNameText, tourSprite, timeText, points, playerPion);
-            rollButton.draw(window);
-            window.display();
-            rollButton.resetClicked();
-        
-            // Changer de joueur
-            joueur1Turn = false;
-
-            sf::sleep(sf::seconds(3));
-        } else if (!joueur1Turn) {
-            int currentPos = joueur2->getPion()->getPos();
-            auto result2 = tableau.initializeDiceSprites(des, rollButton.getPosition(), currentPos, points, joueur2, window);
-            diceSprites = result2.first;
-            joueur2->getPion()->setPos(result2.second);
-            position2 = result2.second;
-            window.clear();
-            drawGameElements(window, rollButton, sprite, joueur1, joueur2, diceSprites, joueur1PointsText, joueur2PointsText, playerNameText, tourSprite, timeText, points, playerPion);
-            rollButton.draw(window);
-            window.display();
-            // Attendre un court moment pour afficher les dés avant de réaliser l'action
-            sf::sleep(sf:: milliseconds(1000));  // Ajoutez le temps souhaité en millisecondes
-            // Réaliser l'action après l'affichage des dés
-            tableau.actionAtPosition(position2, window, points, joueur2);
-            window.clear();
-            drawGameElements(window, rollButton, sprite, joueur1, joueur2, diceSprites, joueur1PointsText, joueur2PointsText, playerNameText, tourSprite, timeText, points, playerPion);
-            rollButton.draw(window);
-            window.display();
-            rollButton.resetClicked();
-            joueur1Turn = true;
-            window.draw(tourSprite);
-            window.display();
-            sf::sleep(sf::seconds(2));
-        }
-    }
- 
-    drawGameElements(window, rollButton, sprite, joueur1, joueur2, diceSprites, joueur1PointsText, joueur2PointsText, playerNameText, tourSprite, timeText, points, playerPion);
-
-    // mise à jour du temps
-    // Mise à jour du texte du temps écoulé
-    sf::Time elapsedTime = globalTimer.getElapsedTime();
-    int minutes = static_cast<int>(elapsedTime.asSeconds()) / 60;
-    int seconds = static_cast<int>(elapsedTime.asSeconds()) % 60;
-
-    timeText.setString("Timer : " + std::to_string(minutes) + " min " + std::to_string(seconds) + " sec");
-    // Dessinez les éléments du jeu
-    window.draw(timeText);
-
-    window.display();
-
-}
-}
-
-
-
-
-
+    sf::Clock globalTimer; const sf::Time timeLimit = sf::seconds(60.0f);
+    sf::Text timeText; setupTimeText(timeText, stdFont);
+    runGameLoop(window, joueur1, joueur2, points, des, rollButton, sprite, diceSprites, joueur1PointsText, joueur2PointsText, playerNameText, tourSprite, timeText, joueur1Turn, globalTimer, timeLimit, playerPion, tableau);
+    endGame(window, joueur1, joueur2, tableau);
+}   
 
 
 

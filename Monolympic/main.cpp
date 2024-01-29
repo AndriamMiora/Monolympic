@@ -17,6 +17,7 @@
 #include <SFML/System/Clock.hpp>
 
 int main(){
+    
     beginGame();
     return 0;
 }

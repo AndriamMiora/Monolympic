@@ -11,24 +11,39 @@ class CaseQuiz : public Case {
 public:
     CaseQuiz(int _position) : Case(_position) {}
 
-     void action(Joueur& J, sf::RenderWindow& window,std::vector<sf::Vector2f> points) const override{
+    void initializeSprite(sf::Sprite& sprite, const sf::Vector2f& position, const sf::Vector2f& origin, const sf::Vector2f& scale) const  {
+    sprite.setOrigin(origin.x, origin.y);
+    sprite.setPosition(position);
+    sprite.setScale(scale.x, scale.y);
+}
+
+
+    void drawsprite(sf::RenderWindow& window, sf::Sprite& spriteA, sf::Sprite& spriteB, sf::Sprite& spriteC, sf::Sprite& spriteD, sf::Sprite& sprite) const {
+           // Dessiner les sprites
+        window.draw(sprite);
+        window.draw(spriteA);
+        window.draw(spriteB);
+        window.draw(spriteC);
+        window.draw(spriteD);
+        // Afficher la fenêtre
+        window.display();
+    }
+
+    void action(Joueur& J, sf::RenderWindow& window,std::vector<sf::Vector2f> points) const override{
         std::cout << "Vous êtes sur une case Quiz (position " << getPosition() << ")." << std::endl;
         //génère un nombre aléatoire entre 1 et 10
         int nombreAleatoire = rand() % 10 + 1;
         // load file 
-
         if (J.getCarteDispenseQuiz()) {
             sf :: Texture texture;
             if (!texture.loadFromFile("assets/dispensequiz.jpg")) {
                 std::cerr << "Erreur lors du chargement de l'image de la case quiz" << std::endl;
             }
-            sf::Sprite sprite;
-            sprite.setTexture(texture);
+            sf::Sprite sprite; sprite.setTexture(texture);
             sprite.setOrigin(texture.getSize().x / 2.0f, texture.getSize().y / 2.0f);
             sprite.setPosition(window.getSize().x / 2.0f, window.getSize().y / 2.0f);
             sprite.setScale(1.0f, 1.0f);
 
-          
             window.draw(sprite);
             window.display();
             sf::sleep(sf::seconds(5));
@@ -39,208 +54,137 @@ public:
         actionCaseQuiz(nombreAleatoire, J, window, points);
     }
 
-    void actionCaseQuiz(int nombreAleatoire, Joueur& J, sf::RenderWindow& window, std::vector<sf::Vector2f> points) const {
-    
-    sf::Texture textureA, textureB, textureC, textureD, texture;
-    if (!textureA.loadFromFile("assets/Quiz/A.png")) {
-        std::cerr << "Erreur lors du chargement de la texture pour l'image A" << std::endl;
+// Fonction pour gérer la réponse
+void handleResponse(sf::RenderWindow& window, const sf::Sprite& sprite, Joueur& J, std :: string bonneReponse, std::string reponse) const {
+    window.draw(sprite);
+    window.display();
+    if (reponse == bonneReponse) {
+        animateBonneReponse(window, J);
+        J.setPoints(J.getPoints() + 20);
+    } else {
+        animateMauvaiseReponse(window, J);
+        J.setPoints(std::max(0, J.getPoints() - 20));
     }
+    sf::sleep(sf::milliseconds(500));  // Ajustez le délai si nécessaire
+}
 
-    if (!textureB.loadFromFile("assets/Quiz/B.png")) {
-        std::cerr << "Erreur lors du chargement de la texture pour l'image B" << std::endl;
+    // Fonction pour gérer le clic de la souris
+bool handleMouseClick(sf::RenderWindow& window, float mouseX, float mouseY, const sf::Sprite& spriteA,
+    const sf::Sprite& spriteB, const sf::Sprite& spriteC, const sf::Sprite& spriteD,Joueur& J, std::string bonneReponse) const {
+    if (spriteA.getGlobalBounds().contains(mouseX, mouseY)) {
+        handleResponse(window, spriteA, J, bonneReponse, "A");
+        return true;
+    } else if (spriteB.getGlobalBounds().contains(mouseX, mouseY)) {
+        handleResponse(window, spriteB, J, bonneReponse, "B");
+        return true;
+    } else if (spriteC.getGlobalBounds().contains(mouseX, mouseY)) {
+        handleResponse(window, spriteC, J, bonneReponse, "C");
+        return true;
+    } else if (spriteD.getGlobalBounds().contains(mouseX, mouseY)) {
+        handleResponse(window, spriteD, J, bonneReponse, "D");
+        return true;
     }
+    return false;
+}
 
-    if (!textureC.loadFromFile("assets/Quiz/C.png")) {
-        std::cerr << "Erreur lors du chargement de la texture pour l'image C" << std::endl;
-    }
 
-    if (!textureD.loadFromFile("assets/Quiz/D.png")) {
-        std::cerr << "Erreur lors du chargement de la texture pour l'image D" << std::endl;
-    }
-
-    if (!texture.loadFromFile("assets/Quiz/" + std::to_string(nombreAleatoire) + ".jpg")) {
-        std::cerr << "Erreur lors du chargement de la texture pour l'image A" << std::endl;
-    }
-
-    sf::Sprite spriteA, spriteB, spriteC, spriteD, sprite;
-    spriteA.setTexture(textureA);
-    spriteA.setOrigin(textureA.getSize().x / 2.0f, textureA.getSize().y / 2.0f);
-    spriteA.setPosition(640, 360);
-    spriteA.setScale(0.07f, 0.07f);
-
-    spriteB.setTexture(textureB);
-    spriteB.setOrigin(textureB.getSize().x / 2.0f, textureB.getSize().y / 2.0f);
-    spriteB.setPosition(640, 385);
-    spriteB.setScale(0.07f, 0.07f);
-
-    spriteC.setTexture(textureC);
-    spriteC.setOrigin(textureC.getSize().x / 2.0f, textureC.getSize().y / 2.0f);
-    spriteC.setPosition(640, 410);
-    spriteC.setScale(0.07f, 0.07f);
-
-    spriteD.setTexture(textureD);
-    spriteD.setOrigin(textureD.getSize().x / 2.0f, textureD.getSize().y / 2.0f);
-    spriteD.setPosition(640, 440);
-    spriteD.setScale(0.07f, 0.07f);
-
-    sprite.setTexture(texture);
-    sprite.setOrigin(texture.getSize().x / 2.0f, texture.getSize().y / 2.0f);
-    sprite.setPosition(window.getSize().x / 2.0f, window.getSize().y / 2.0f);
-    sprite.setScale(1.0f, 1.0f);
-
-     // Dessiner les sprites
-        window.draw(sprite);
+// Fonction pour simuler la réponse du bot
+void simulateBotAnswer(sf::RenderWindow& window, const sf::Sprite& sprite, const sf::Sprite& spriteA,
+                       const sf::Sprite& spriteB, const sf::Sprite& spriteC, const sf::Sprite& spriteD,
+                       Joueur& J, std :: string bonneReponse) const {
+    window.draw(sprite);
+    window.display();
+    sf::sleep(sf::milliseconds(1000));  // Ajustez le délai si nécessaire
+    int nombreAleatoire = rand() % 4 + 1;
+    std :: string reponse ;
+    if (nombreAleatoire == 1) {
+        reponse = "A";
         window.draw(spriteA);
+    } else if (nombreAleatoire == 2) {
+        reponse = "B";
         window.draw(spriteB);
+    } else if (nombreAleatoire == 3) {
+        reponse = "C";
         window.draw(spriteC);
+    } else if (nombreAleatoire == 4) {
+        reponse = "D";
         window.draw(spriteD);
-        // Afficher la fenêtre
-        window.display();
-    
-    // Sélection de la bonne réponse en fonction du nombre aléatoire
-    char bonneReponse;
+    }
+    if (reponse == bonneReponse) {
+        J.setPoints(J.getPoints() + 20);
+    } else {
+        J.setPoints(std::max(0, J.getPoints() - 20));
+    }
+    sf::sleep(sf::milliseconds(500));  // Ajustez le délai si nécessaire
+}
+
+std::string reponse(int nombreAleatoire) const {
     switch (nombreAleatoire) {
         case 1:
-            bonneReponse = 'A';
-            break;
+            return "A";
         case 2:
-            bonneReponse = 'B';
-            break;
+            return "B";
         case 3:
-            bonneReponse = 'C';
-            break;
+            return "C";
         case 4:
-            bonneReponse = 'D';
-            break;
+            return "D";
         case 5:
-            bonneReponse = 'A';
-            break;
+            return "A";
         case 6:
-            bonneReponse = 'B';
-            break;
+            return "B";
         case 7:
-            bonneReponse = 'C';
-            break;
+            return "C";
         case 8:
-            bonneReponse = 'D';
-            break;
+            return "D";
         case 9:
-            bonneReponse = 'A';
-            break;
+            return "A";
         case 10:
-            bonneReponse = 'B';
-            break;
-        default:
-            // Gérer le cas où nombreAleatoire n'est pas dans la plage attendue
-            std::cerr << "Erreur : nombre aléatoire hors de la plage attendue." << std::endl;
-            return;
+            return "B";
+    }
+    return "A";
     }
 
-    // Boucle d'attente d'une réponse
-    bool reponse = false;
-     // Boucle d'affichage
-    
 
-    // Clic aléatoire sur une réponse si on est un bot
-    if (J.getBot() == true) {
-        reponse = true;
-        window.draw(sprite);
-        window.draw(spriteA);
-        window.draw(spriteB);
-        window.draw(spriteC);
-        window.draw(spriteD);
-        window.display();
-        // Attendre un court instant pour éviter le clic immédiat sur une réponse
-        sf::sleep(sf::milliseconds(1000));  // Vous pouvez ajuster le délai si nécessaire
-        // Générer un nombre aléatoire entre 1 et 4
-        int nombreAleatoire = rand() % 4 + 1;
-        // si nombreAleatoire correspond à la bonne réponse : +20 points
-        if (nombreAleatoire == 1 && bonneReponse == 'A') {
-            J.setPoints(J.getPoints() + 20);
-        } else if (nombreAleatoire == 2 && bonneReponse == 'B') {
-            J.setPoints(J.getPoints() + 20);
-        } else if (nombreAleatoire == 3 && bonneReponse == 'C') {
-            J.setPoints(J.getPoints() + 20);
-        } else if (nombreAleatoire == 4 && bonneReponse == 'D') {
-            J.setPoints(J.getPoints() + 20);
-        } else {
-            if (J.getPoints() - 20 < 0) {
-                J.setPoints(0);
-            } else {
-                J.setPoints(J.getPoints() - 20);
-            }
-    }
-    return; 
-    }
-        // Gérer les clics de souris normalement si on n'est pas un bot
-    else { 
-    while (window.isOpen()) {
-    sf::Event event;
-        while (window.pollEvent(event)) {
-            if (event.type == sf::Event::Closed) {
-                window.close();
-                return;  // Sortir de la fonction
-            }
+void initializeSprites(sf::RenderWindow& window, sf::Sprite& spriteA, sf::Sprite& spriteB, sf::Sprite& spriteC,
+                       sf::Sprite& spriteD, sf::Sprite& sprite, sf::Texture& textureA, sf::Texture& textureB,
+                       sf::Texture& textureC, sf::Texture& textureD, sf::Texture& texture) const {
+    initializeSprite(spriteA, sf::Vector2f(640, 360), sf::Vector2f(textureA.getSize().x / 2.0f, textureA.getSize().y / 2.0f),
+                     sf::Vector2f(0.07f, 0.07f));
+    initializeSprite(spriteB, sf::Vector2f(640, 385), sf::Vector2f(textureB.getSize().x / 2.0f, textureB.getSize().y / 2.0f),
+                     sf::Vector2f(0.07f, 0.07f));
+    initializeSprite(spriteC, sf::Vector2f(640, 410), sf::Vector2f(textureC.getSize().x / 2.0f, textureC.getSize().y / 2.0f),
+                     sf::Vector2f(0.07f, 0.07f));
+    initializeSprite(spriteD, sf::Vector2f(640, 440), sf::Vector2f(textureD.getSize().x / 2.0f, textureD.getSize().y / 2.0f),
+                     sf::Vector2f(0.07f, 0.07f));
+    initializeSprite(sprite, sf::Vector2f(window.getSize().x / 2.0f, window.getSize().y / 2.0f),
+                     sf::Vector2f(texture.getSize().x / 2.0f, texture.getSize().y / 2.0f), sf::Vector2f(1.0f, 1.0f));
+}
 
-            if ((event.type == sf::Event::MouseButtonPressed && event.mouseButton.button == sf::Mouse::Left)) {
-                   if (spriteA.getGlobalBounds().contains(event.mouseButton.x, event.mouseButton.y)) {
-                        // Gérer la réponse A
-                        reponse = true;
-                        if (bonneReponse == 'A') {
-                            animateBonneReponse(window, J);
-                            J.setPoints(J.getPoints() + 20);
-                        } else {
-                            animateMauvaiseReponse(window , J);
-                            if (J.getPoints() - 20 < 0) {
-                                J.setPoints(0);
-                            } else {
-                                J.setPoints(J.getPoints() - 20);
-                            }
-                        }
-                    } else if (spriteB.getGlobalBounds().contains(event.mouseButton.x, event.mouseButton.y)) {
-                        // Gérer la réponse B
-                        reponse = true;
-                        if (bonneReponse == 'B') {
-                            animateBonneReponse(window , J);
-                            J.setPoints(J.getPoints() + 20);
-                        } else {
-                            animateMauvaiseReponse(window , J);
-                             if (J.getPoints() - 20 < 0) {
-                                J.setPoints(0);
-                            } else {
-                                J.setPoints(J.getPoints() - 20);
-                            }
-                        }
-                    } else if (spriteC.getGlobalBounds().contains(event.mouseButton.x, event.mouseButton.y)) {
-                        // Gérer la réponse C
-                        reponse = true;
-                        if (bonneReponse == 'C') {
-                            animateBonneReponse(window, J);
-                            J.setPoints(J.getPoints() + 20);
-                        } else {
-                            animateMauvaiseReponse(window, J);
-                             if (J.getPoints() - 20 < 0) {
-                                J.setPoints(0);
-                            } else {
-                                J.setPoints(J.getPoints() - 20);
-                            }
-                        }
-                    } else if (spriteD.getGlobalBounds().contains(event.mouseButton.x, event.mouseButton.y)) {
-                        // Gérer la réponse D
-                        reponse = true;
-                        if (bonneReponse == 'D') {
-                            animateBonneReponse(window, J);
 
-                            J.setPoints(J.getPoints() + 20);
-                        } else {
-                            animateMauvaiseReponse(window , J);
-                             if (J.getPoints() - 20 < 0) {
-                                J.setPoints(0);
-                            } else {
-                                J.setPoints(J.getPoints() - 20);
-                            }
-                        }
-                    }
+    void actionCaseQuiz(int nombreAleatoire, Joueur& J, sf::RenderWindow& window, std::vector<sf::Vector2f> points) const {
+        sf::Texture textureA, textureB, textureC, textureD, texture;
+        textureA.loadFromFile("assets/Quiz/A.png"); textureB.loadFromFile("assets/Quiz/B.png");
+        textureC.loadFromFile("assets/Quiz/C.png"); textureD.loadFromFile("assets/Quiz/D.png");
+        texture.loadFromFile("assets/Quiz/" + std::to_string(nombreAleatoire) + ".jpg");
+        sf::Sprite spriteA, spriteB, spriteC, spriteD, sprite;
+        spriteA.setTexture(textureA); spriteB.setTexture(textureB); spriteC.setTexture(textureC); spriteD.setTexture(textureD); sprite.setTexture(texture);
+        initializeSprites(window, spriteA, spriteB, spriteC, spriteD, sprite, textureA, textureB, textureC, textureD, texture);
+        // Dessiner les sprites 
+        drawsprite(window, spriteA, spriteB, spriteC, spriteD, sprite);
+        std :: string bonneReponse = reponse(nombreAleatoire);
+        bool reponse = false;
+        if (J.getBot()) {
+            reponse = true;
+            simulateBotAnswer(window, sprite, spriteA, spriteB, spriteC, spriteD, J, bonneReponse); return;
+        }
+        while (window.isOpen()) {
+            sf::Event event;
+            while (window.pollEvent(event)) {
+                if (event.type == sf::Event::Closed) {
+                    window.close(); return;
+                }
+                if (event.type == sf::Event::MouseButtonPressed && event.mouseButton.button == sf::Mouse::Left) {
+                    reponse = handleMouseClick(window, event.mouseButton.x, event.mouseButton.y,spriteA, spriteB, spriteC, spriteD, J, bonneReponse);
                 }
             }
             if (reponse) {
@@ -248,185 +192,71 @@ public:
             }
         }
     }
-    }
 
 
     
 // Fonction qui anime la bonne réponse
-void animateBonneReponse(sf::RenderWindow& window , Joueur& J) const {
-    // Charger la texture de l'image "bonneReponse.png"
+void animateBonneReponse(sf::RenderWindow& window, Joueur& J) const {
+    // Charger les textures "bonneReponse.jpg" et "continuer1.png"
     sf::Texture bonneReponseTexture;
-    if (!bonneReponseTexture.loadFromFile("assets/bonneReponse.jpg")) {
-        std::cerr << "Erreur lors du chargement de la texture pour l'image bonneReponse" << std::endl;
-        return;
-    }
-
-    // Charger la texture de l'image "continuer.png"
+    bonneReponseTexture.loadFromFile("assets/bonneReponse.jpg");
     sf::Texture continuerTexture;
-    if (!continuerTexture.loadFromFile("assets/continuer1.png")) {
-        std::cerr << "Erreur lors du chargement de la texture pour l'image continuer" << std::endl;
-        return;
-    }
-
+    continuerTexture.loadFromFile("assets/continuer1.png");
     // Charger la texture du fond
     sf::Texture fondTexture;
     fondTexture.loadFromFile("assets/background.png");
-
-    // Créer le sprite pour le fond
-    sf::Sprite fondSprite;
-    fondSprite.setTexture(fondTexture);
-    fondSprite.setScale(1.0f, 1.0f);
-
-    // Créer le sprite pour l'image "bonneReponse.png"
-    sf::Sprite bonneReponseSprite;
-    bonneReponseSprite.setTexture(bonneReponseTexture);
-    bonneReponseSprite.setOrigin(bonneReponseTexture.getSize().x / 2.0f, bonneReponseTexture.getSize().y / 2.0f);
-    bonneReponseSprite.setPosition(window.getSize().x / 2.0f, window.getSize().y / 2.0f);
-    bonneReponseSprite.setScale(1.0f, 1.0f);
-
-    sf::Sprite continuerSprite;
-        continuerSprite.setTexture(continuerTexture);
-        continuerSprite.setOrigin(continuerSprite.getLocalBounds().width / 2.0f, continuerSprite.getLocalBounds().height / 2.0f);
-        continuerSprite.setPosition(640, 550);  // Position spécifiée pour "continuerSprite"
-        continuerSprite.setScale(0.2f, 0.2f);
-
+    // Créer les sprites pour le fond, l'image "bonneReponse.jpg" et le bouton "continuer"
+    sf::Sprite fondSprite(fondTexture); sf::Sprite bonneReponseSprite(bonneReponseTexture);
+    sf::Sprite continuerSprite(continuerTexture);
+    // Initialiser les positions et échelles des sprites
+    initializeSprite(bonneReponseSprite, sf::Vector2f(window.getSize().x / 2.0f, window.getSize().y / 2.0f),sf::Vector2f(bonneReponseTexture.getSize().x / 2.0f, bonneReponseTexture.getSize().y / 2.0f),sf::Vector2f(1.0f, 1.0f));
+    initializeSprite(continuerSprite, sf::Vector2f(640, 550),sf::Vector2f(continuerSprite.getLocalBounds().width / 2.0f, continuerSprite.getLocalBounds().height / 2.0f),sf::Vector2f(0.2f, 0.2f));
     // Boucle d'affichage
     while (window.isOpen()) {
         // Gérer les événements
         sf::Event event;
         while (window.pollEvent(event)) {
             if (event.type == sf::Event::Closed) {
-                window.close();
-                return;  // Sortir de la fonction
+                window.close(); return;  // Sortir de la fonction
             }
-            
-            if (J.getBot() == true ) {
-                // Afficher le fond
-                window.draw(fondSprite);
-
-                // Afficher les sprites
-                window.draw(bonneReponseSprite);
-                window.draw(continuerSprite);
-                sf::sleep(sf::milliseconds(1000));  // Vous pouvez ajuster le délai si nécessaire
-                return;  // Sortir de la fonction
-            }
-            else {
-            if (event.type == sf::Event::MouseButtonPressed && event.mouseButton.button == sf::Mouse::Left) {
+            if (!J.getBot() && event.type == sf::Event::MouseButtonPressed && event.mouseButton.button == sf::Mouse::Left) {
                 if (continuerSprite.getGlobalBounds().contains(event.mouseButton.x, event.mouseButton.y)) {
-                    // Gérer le clic sur le bouton "continuer"
-                    // Attendre un court instant pour éviter le clic immédiat sur "continuer" dans la nouvelle fenêtre
-                    sf::sleep(sf::milliseconds(1000));  // Vous pouvez ajuster le délai si nécessaire
-                    return;  // Sortir de la fonction
-              
-                }
-            }
-            }
-        }
-
-        // Effacer le contenu de la fenêtre
-        window.clear();
-
-        // Afficher le fond
-        window.draw(fondSprite);
-
-        // Afficher les sprites
-        window.draw(bonneReponseSprite);
-        window.draw(continuerSprite);
-
-        // Afficher la fenêtre
-        window.display();
-    }
+                    sf::sleep(sf::milliseconds(100));  return;  // Sortir de la fonction
+                } } }
+        // Affichage des sprites
+        window.clear();window.draw(fondSprite); window.draw(bonneReponseSprite); window.draw(continuerSprite);
+        window.display();}
 }
 
-
-
-// fonction qui anime la mauvaise réponse
-
-// Fonction qui anime la mauvaise réponse
 void animateMauvaiseReponse(sf::RenderWindow& window, Joueur& J) const {
-    // Charger la texture de l'image "mauvaiseReponse.png"
+    // Charger les textures "mauvaiseReponse.jpg" et "continuer1.png"
     sf::Texture mauvaiseReponseTexture;
-    if (!mauvaiseReponseTexture.loadFromFile("assets/mauvaiseReponse.jpg")) {
-        std::cerr << "Erreur lors du chargement de la texture pour l'image mauvaiseReponse" << std::endl;
-        return;
-    }
-
-    // Charger la texture de l'image "continuer.png"
+    mauvaiseReponseTexture.loadFromFile("assets/mauvaiseReponse.jpg");
     sf::Texture continuerTexture;
-    if (!continuerTexture.loadFromFile("assets/continuer2.png")) {
-        std::cerr << "Erreur lors du chargement de la texture pour l'image continuer" << std::endl;
-        return;
-    }
-
+    continuerTexture.loadFromFile("assets/continuer2.png");
     // Charger la texture du fond
     sf::Texture fondTexture;
     fondTexture.loadFromFile("assets/background.png");
-
-    // Créer le sprite pour le fond
-    sf::Sprite fondSprite;
-    fondSprite.setTexture(fondTexture);
-    fondSprite.setScale(1.0f, 1.0f);
-
-    // Créer le sprite pour l'image "mauvaiseReponse.png"
-  
-
-    sf::Sprite mauvaiseReponseSprite;
-    mauvaiseReponseSprite.setTexture(mauvaiseReponseTexture);
-    mauvaiseReponseSprite.setOrigin(mauvaiseReponseTexture.getSize().x / 2.0f, mauvaiseReponseTexture.getSize().y / 2.0f);
-    mauvaiseReponseSprite.setPosition(window.getSize().x / 2.0f, window.getSize().y / 2.0f);
-    mauvaiseReponseSprite.setScale(1.0f, 1.0f);
-
-    sf::Sprite continuerSprite;
-        continuerSprite.setTexture(continuerTexture);
-        continuerSprite.setOrigin(continuerSprite.getLocalBounds().width / 2.0f, continuerSprite.getLocalBounds().height / 2.0f);
-        continuerSprite.setPosition(640, 550);  // Position spécifiée pour "continuerSprite"
-        continuerSprite.setScale(0.2f, 0.2f);
-
-   // Boucle d'affichage
+    // Créer les sprites pour le fond, l'image "mauvaiseReponse.jpg" et le bouton "continuer"
+    sf::Sprite fondSprite(fondTexture); sf::Sprite mauvaiseReponseSprite(mauvaiseReponseTexture);
+    sf::Sprite continuerSprite(continuerTexture);
+    // Initialiser les positions et échelles des sprites
+    initializeSprite(mauvaiseReponseSprite, sf::Vector2f(window.getSize().x / 2.0f, window.getSize().y / 2.0f),sf::Vector2f(mauvaiseReponseTexture.getSize().x / 2.0f, mauvaiseReponseTexture.getSize().y / 2.0f),sf::Vector2f(1.0f, 1.0f));
+    initializeSprite(continuerSprite, sf::Vector2f(640, 550),sf::Vector2f(continuerSprite.getLocalBounds().width / 2.0f, continuerSprite.getLocalBounds().height / 2.0f),sf::Vector2f(0.2f, 0.2f));
+    // Boucle d'affichage
     while (window.isOpen()) {
         // Gérer les événements
         sf::Event event;
         while (window.pollEvent(event)) {
             if (event.type == sf::Event::Closed) {
-                window.close();
-                return;  // Sortir de la fonction
+                window.close(); return;  // Sortir de la fonction
             }
-            
-            if (J.getBot() == true ) {
-                // Afficher le fond
-                window.draw(fondSprite);
-
-                // Afficher les sprites
-                window.draw(mauvaiseReponseSprite);
-                window.draw(continuerSprite);
-                sf::sleep(sf::milliseconds(1000));  // Vous pouvez ajuster le délai si nécessaire
-                return;  // Sortir de la fonction
-            }
-            else {
-            if (event.type == sf::Event::MouseButtonPressed && event.mouseButton.button == sf::Mouse::Left) {
+            if (!J.getBot() && event.type == sf::Event::MouseButtonPressed && event.mouseButton.button == sf::Mouse::Left) {
                 if (continuerSprite.getGlobalBounds().contains(event.mouseButton.x, event.mouseButton.y)) {
-                    // Gérer le clic sur le bouton "continuer"
-                    // Attendre un court instant pour éviter le clic immédiat sur "continuer" dans la nouvelle fenêtre
-                    sf::sleep(sf::milliseconds(1000));  // Vous pouvez ajuster le délai si nécessaire
-                    return;  // Sortir de la fonction
-              
-                }
-            }
-            }
-        }
-
-        // Effacer le contenu de la fenêtre
-        window.clear();
-
-        // Afficher le fond
-        window.draw(fondSprite);
-
-        // Afficher les sprites
-        window.draw(mauvaiseReponseSprite);
-        window.draw(continuerSprite);
-
-        // Afficher la fenêtre
-        window.display();
-    }
+                    sf::sleep(sf::milliseconds(1000));  return;  // Sortir de la fonction
+                } } }
+        // Affichage des sprites
+        window.clear();window.draw(fondSprite); window.draw(mauvaiseReponseSprite); window.draw(continuerSprite);
+        window.display();}
 }
 };

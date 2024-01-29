@@ -28,5 +28,10 @@ public:
         }
           
     }
+
+    // Méthode pour obtenir le montant de la taxe
+    int getMontant() const {
+        return montant;
+    }
 };
 
