@@ -75,7 +75,7 @@ Ce répertoire contient les fichiers suivants :
 
 ### Fichiers .hpp et .cpp
 
-Ces fichiers définissent les classes utilisés. 
+Ces fichiers définissent les classes utilisées. 
 
 ### Dossiers Additionnels
 
