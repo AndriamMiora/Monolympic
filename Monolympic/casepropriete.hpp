@@ -115,9 +115,9 @@ void achatInstallation(Joueur& J, sf::RenderWindow& window, std::vector<sf::Vect
                 int nombrePiscinesMax = J.getPoints() / 10; // Calcul du nombre maximal de piscines pouvant être achetées
                     if (J.getPoints() >= 15) {
                             int nombreStadesMax = J.getPoints() / 15;  // Calcul du nombre maximal de stades pouvant être achetés
-                            int nbStadesAchetee = 0; // Initialisation du nombre de stades achetés
-                            int nbPiscinesAchetee = 0; // Initialisation du nombre de piscines achetées
-                            int nbSallessAchetee = 0; // Initialisation du nombre de salle achetées
+                            int nbStadesAchetes = 0;//std::min(nombreStadesMax, J.getPoints() / 15); // Achète le maximum de stades possible
+                            int nbPiscinesAchetes = 0;//std::min(nombrePiscinesMax, (J.getPoints() - nbStadesAchetes * 15) / 10); // Achète le maximum de piscines possible
+                            int nbSallesAchetes = 0;//std::min(nombreSallesxMax, (J.getPoints() - nbStadesAchetes * 15 - nbPiscinesAchetes * 10) / 5); // Achète le maximum de salles possible
 
                             // Création de la fenêtre pop-up avec l'image de fond
                             sf::Texture backgroundTexture;
@@ -198,57 +198,63 @@ void achatInstallation(Joueur& J, sf::RenderWindow& window, std::vector<sf::Vect
                                     if (event.type == sf::Event::Closed) {
                                         popup.close();
                                     }
+
                                     else if (event.type == sf::Event::MouseButtonPressed) {
                                         // Vérifier le clic sur le bouton stadeplus.png
                                         if (event.mouseButton.x >= 675 && event.mouseButton.x < 675 + stadeplusTexture.getSize().x &&
                                             event.mouseButton.y >= 417.5 && event.mouseButton.y < 417.5 + stadeplusTexture.getSize().y) {
-                                            if (nbStadesAchetee < nombreStadesMax) {
-                                                nbStadesAchetee++;
+                                            if (nbStadesAchetes < nombreStadesMax && (nbStadesAchetes * 15 + nbPiscinesAchetes * 10 + nbSallesAchetes * 5) < J.getPoints()) {
+                                                nbStadesAchetes++;
                                             }
                                         }
                                         // Vérifier le clic sur le bouton stademoins.png
                                         else if (event.mouseButton.x >= 624 && event.mouseButton.x < 624 + stademoinsTexture.getSize().x &&
                                                 event.mouseButton.y >= 417.5 && event.mouseButton.y < 417.5 + stademoinsTexture.getSize().y) {
-                                            if (nbStadesAchetee > 0) {
-                                                nbStadesAchetee--;
+                                            if (nbStadesAchetes > 0) {
+                                                nbStadesAchetes--;
                                             }
                                         }
+                                        // Vérifier le clic sur le bouton piscineplus.png
                                         if (event.mouseButton.x >= 675 && event.mouseButton.x < 675 + piscineplusTexture.getSize().x &&
                                             event.mouseButton.y >= 437.5 && event.mouseButton.y < 437.5 + piscineplusTexture.getSize().y) {
-                                            if (nbPiscinesAchetee < nombrePiscinesMax) {
-                                                nbPiscinesAchetee++;
+                                            if (nbPiscinesAchetes < nombrePiscinesMax && (nbStadesAchetes * 15 + nbPiscinesAchetes * 10 + nbSallesAchetes * 5) < J.getPoints()) {
+                                                nbPiscinesAchetes++;
                                             }
                                         }
                                         // Vérifier le clic sur le bouton piscinemoins.png
                                         else if (event.mouseButton.x >= 624 && event.mouseButton.x < 624 + piscinemoinsTexture.getSize().x &&
                                                 event.mouseButton.y >= 437.5 && event.mouseButton.y < 437.5 + piscinemoinsTexture.getSize().y) {
-                                            if (nbPiscinesAchetee > 0) {
-                                                nbPiscinesAchetee--;
+                                            if (nbPiscinesAchetes > 0) {
+                                                nbPiscinesAchetes--;
                                             }
                                         }
-                                        if (event.mouseButton.x >= 675 && event.mouseButton.x < 675 + piscineplusTexture.getSize().x &&
-                                            event.mouseButton.y >= 467.5 && event.mouseButton.y < 467.5 + piscineplusTexture.getSize().y) {
-                                            if (nbSallessAchetee < nombreSallesxMax) {
-                                                nbSallessAchetee++;
+                                        // Vérifier le clic sur le bouton salleplus.png
+                                        if (event.mouseButton.x >= 675 && event.mouseButton.x < 675 + salleplusTexture.getSize().x &&
+                                            event.mouseButton.y >= 467.5 && event.mouseButton.y < 467.5 + salleplusTexture.getSize().y) {
+                                            if (nbSallesAchetes < nombreSallesxMax && (nbStadesAchetes * 15 + nbPiscinesAchetes * 10 + nbSallesAchetes * 5) < J.getPoints()) {
+                                                nbSallesAchetes++;
                                             }
                                         }
-                                        // Vérifier le clic sur le bouton piscinemoins.png
-                                        else if (event.mouseButton.x >= 624 && event.mouseButton.x < 624 + piscinemoinsTexture.getSize().x &&
-                                                event.mouseButton.y >= 467.5 && event.mouseButton.y < 467.5 + piscinemoinsTexture.getSize().y) {
-                                            if (nbSallessAchetee > 0) {
-                                                nbSallessAchetee--;
+                                        // Vérifier le clic sur le bouton sallemoins.png
+                                        else if (event.mouseButton.x >= 624 && event.mouseButton.x < 624 + sallemoinsTexture.getSize().x &&
+                                                event.mouseButton.y >= 467.5 && event.mouseButton.y < 467.5 + sallemoinsTexture.getSize().y) {
+                                            if (nbSallesAchetes > 0) {
+                                                nbSallesAchetes--;
                                             }
                                         }
+                                   
                                         if (acheterSprite.getGlobalBounds().contains(event.mouseButton.x, event.mouseButton.y)) {
-                                            J.setPoints(J.getPoints() - (nbStadesAchetee * 15 + 10 * nbPiscinesAchetee+ 5*nbSallessAchetee));
+                                             // Déduire le coût total des points du joueur
+                                            int coutTotal = nbStadesAchetes * 15 + nbPiscinesAchetes * 10 + nbSallesAchetes * 5;
+                                            J.setPoints(J.getPoints() - coutTotal);
                                             // Ferme la fenêtre pop-up
                                             popup.close();
                                             reponse = true;
                                             // Confirme les modifications et l'achat
                                             // Met à jour le nombre de stades
-                                            nombreStades += nbStadesAchetee;
-                                            nombrePiscines += nbPiscinesAchetee;
-                                            nombreSalles += nbSallessAchetee;
+                                            nombreStades += nbStadesAchetes;
+                                            nombrePiscines += nbPiscinesAchetes;
+                                            nombreSalles += nbSallesAchetes;
                                         }
                                         // Vérifie le clic sur le bouton "annuler.png"
                                         else if (annulerSprite.getGlobalBounds().contains(event.mouseButton.x, event.mouseButton.y)) {
@@ -280,8 +286,8 @@ void achatInstallation(Joueur& J, sf::RenderWindow& window, std::vector<sf::Vect
                                 }
                                 sf::Text nbStadesText;
                                 nbStadesText.setFont(font);
-                                nbStadesText.setString(std::to_string(nbStadesAchetee));
-                                //std::cout << "Nombre de achetés sur la case : " << nbStadesAchetee << std::endl;
+                                nbStadesText.setString(std::to_string(nbStadesAchetes));
+                                //std::cout << "Nombre de achetés sur la case : " << nbStadesAchetes<< std::endl;
                                 nbStadesText.setCharacterSize(12);
                                 nbStadesText.setFillColor(sf::Color::Black);
                                 nbStadesText.setPosition(655, 419); // Position spécifiée
@@ -296,7 +302,7 @@ void achatInstallation(Joueur& J, sf::RenderWindow& window, std::vector<sf::Vect
 
                                 sf::Text nbPiscinesText;
                                 nbPiscinesText.setFont(font);
-                                nbPiscinesText.setString(std::to_string(nbPiscinesAchetee));
+                                nbPiscinesText.setString(std::to_string(nbPiscinesAchetes));
                                 nbPiscinesText.setCharacterSize(12);
                                 nbPiscinesText.setFillColor(sf::Color::Black);
                                 nbPiscinesText.setPosition(piscineplusSprite.getPosition().x-19, piscineplusSprite.getPosition().y); // Position ajustée
@@ -312,14 +318,15 @@ void achatInstallation(Joueur& J, sf::RenderWindow& window, std::vector<sf::Vect
         
                                 sf::Text nbSallesText;
                                 nbSallesText.setFont(font);
-                                nbSallesText.setString(std::to_string(nombreSalles));
+                                nbSallesText.setString(std::to_string(nbSallesAchetes));//nbSallesAchetes
+
                                 nbSallesText.setCharacterSize(12);
                                 nbSallesText.setFillColor(sf::Color::Black);
                                 nbSallesText.setPosition(salleplusSprite.getPosition().x-19, salleplusSprite.getPosition().y); // Position ajustée
 
                                 sf::Text nbSallesSurCaseText;
                                 nbSallesSurCaseText.setFont(font);
-                                nbSallesSurCaseText.setString(std::to_string(nbSallessAchetee));
+                                nbSallesSurCaseText.setString(std::to_string(nombreSalles));//nombreSalles
                                 nbSallesSurCaseText.setCharacterSize(12);
                                 nbSallesSurCaseText.setFillColor(sf::Color::Black);
                                 nbSallesSurCaseText.setPosition(salleplusSprite.getPosition().x + 50, salleplusSprite.getPosition().y); // Position ajustée
