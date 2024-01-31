@@ -1,4 +1,4 @@
-CC= arch -x86_64 /usr/bin/g++ # g++
+CC=  g++ #arch -x86_64 /usr/bin/
 CCFLAGS= -Wall -std=c++17 -g
 SRC= $(wildcard ../*.cc)
 OBJ= $(SRC:.cc=.o)

@@ -12,7 +12,6 @@ private:
     mutable int nombreStades;
     mutable int nombrePiscines;
     mutable int nombreSalles;
-    mutable int loyerPaye;
 public:
     CasePropriete(int _position, int _cout, bool _estAchete) 
         : CasePayante(_position, _cout, _estAchete),
@@ -116,56 +115,41 @@ sf::Texture& stademoinsTexture, sf::Texture& piscineplusTexture, sf::Texture& pi
 sf::Texture& salleplusTexture, sf::Texture& sallemoinsTexture, sf::Text& nbStadesText, sf::Text& nbPiscinesText,
 sf::Text& nbPiscinesSurCaseText, sf::Text& nbStadesSurCaseText, sf::Text& nbSallesText, sf::Text& nbSallesSurCaseText) const {
                 while (popup.isOpen()) {
-                                sf::Event event;
+                    sf::Event event;
                                 while (popup.pollEvent(event)) {
                                     if (event.type == sf::Event::Closed) {
-                                        popup.close();
-                                    }
-
+                                        popup.close(); }
                                     else if (event.type == sf::Event::MouseButtonPressed) {
                                         // Vérifier le clic sur le bouton stadeplus.png
                                         if (event.mouseButton.x >= 675 && event.mouseButton.x < 675 + stadeplusTexture.getSize().x &&
                                             event.mouseButton.y >= 417.5 && event.mouseButton.y < 417.5 + stadeplusTexture.getSize().y) {
                                             if (nbStadesAchetes < nombreStadesMax && (nbStadesAchetes * 15 + nbPiscinesAchetes * 10 + nbSallesAchetes * 5) < J.getPoints()) {
-                                                nbStadesAchetes++;
-                                            }
-                                        }
+                                                nbStadesAchetes++; }}
                                         // Vérifier le clic sur le bouton stademoins.png
                                         else if (event.mouseButton.x >= 624 && event.mouseButton.x < 624 + stademoinsTexture.getSize().x &&
                                                 event.mouseButton.y >= 417.5 && event.mouseButton.y < 417.5 + stademoinsTexture.getSize().y) {
                                             if (nbStadesAchetes > 0) {
-                                                nbStadesAchetes--;
-                                            }
-                                        }
+                                                nbStadesAchetes--;}}
                                         // Vérifier le clic sur le bouton piscineplus.png
                                         if (event.mouseButton.x >= 675 && event.mouseButton.x < 675 + piscineplusTexture.getSize().x &&
                                             event.mouseButton.y >= 442.5 && event.mouseButton.y < 442.5 + piscineplusTexture.getSize().y) {
                                             if (nbPiscinesAchetes < nombrePiscinesMax && (nbStadesAchetes * 15 + nbPiscinesAchetes * 10 + nbSallesAchetes * 5) < J.getPoints()) {
-                                                nbPiscinesAchetes++;
-                                            }
-                                        }
+                                                nbPiscinesAchetes++;}}
                                         // Vérifier le clic sur le bouton piscinemoins.png
                                         else if (event.mouseButton.x >= 624 && event.mouseButton.x < 624 + piscinemoinsTexture.getSize().x &&
                                                 event.mouseButton.y >= 442.5 && event.mouseButton.y < 442.5 + piscinemoinsTexture.getSize().y) {
                                             if (nbPiscinesAchetes > 0) {
-                                                nbPiscinesAchetes--;
-                                            }
-                                        }
+                                                nbPiscinesAchetes--;}}
                                         // Vérifier le clic sur le bouton salleplus.png
                                         if (event.mouseButton.x >= 675 && event.mouseButton.x < 675 + salleplusTexture.getSize().x &&
                                             event.mouseButton.y >= 467.5 && event.mouseButton.y < 467.5 + salleplusTexture.getSize().y) {
                                             if (nbSallesAchetes < nombreSallesxMax && (nbStadesAchetes * 15 + nbPiscinesAchetes * 10 + nbSallesAchetes * 5) < J.getPoints()) {
-                                                nbSallesAchetes++;
-                                            }
-                                        }
+                                                nbSallesAchetes++;}}
                                         // Vérifier le clic sur le bouton sallemoins.png
                                         else if (event.mouseButton.x >= 624 && event.mouseButton.x < 624 + sallemoinsTexture.getSize().x &&
                                                 event.mouseButton.y >= 467.5 && event.mouseButton.y < 467.5 + sallemoinsTexture.getSize().y) {
                                             if (nbSallesAchetes > 0) {
-                                                nbSallesAchetes--;
-                                            }
-                                        }
-                                   
+                                                nbSallesAchetes--;}}
                                         if (acheterSprite.getGlobalBounds().contains(event.mouseButton.x, event.mouseButton.y)) {
                                              // Déduire le coût total des points du joueur
                                             int coutTotal = nbStadesAchetes * 15 + nbPiscinesAchetes * 10 + nbSallesAchetes * 5;
@@ -174,26 +158,38 @@ sf::Text& nbPiscinesSurCaseText, sf::Text& nbStadesSurCaseText, sf::Text& nbSall
                                             popup.close();
                                             reponse = true;
                                             // Confirme les modifications et l'achat
-                                            // Met à jour le nombre de stades
                                             nombreStades += nbStadesAchetes;
                                             nombrePiscines += nbPiscinesAchetes;
-                                            nombreSalles += nbSallesAchetes;
-                                        }
+                                            nombreSalles += nbSallesAchetes;}
                                         // Vérifie le clic sur le bouton "annuler.png"
                                         else if (annulerSprite.getGlobalBounds().contains(event.mouseButton.x, event.mouseButton.y)) {
                                             reponse = false;
                                             // Ferme la fenêtre pop-up sans rien modifier
-                                            popup.close();
-                                        }
-
-
+                                            popup.close();}
+                                                                                  
                                     }
                                 }
-
-    affichetexte(popup, nbStadesText, nbPiscinesText, nbPiscinesSurCaseText, nbStadesSurCaseText, nbSallesText, nbSallesSurCaseText);                           
-
+                                  afficherPopUp(popup, backgroundSprite, popupSprite, 
+                                                      (const sf::Sprite[]) {stadeplusSprite, stademoinsSprite, piscineplusSprite, piscinemoinsSprite, salleplusSprite, sallemoinsSprite}, 
+                                                      annulerSprite, acheterSprite);  
+                                sf::Font font; font.loadFromFile("police1.otf");
+                                sf::Text nbStadesText; nbStadesText.setFont(font);
+                                createText(nbStadesText, nbStadesAchetes, 655, 419);
+                                sf::Text nbStadesSurCaseText; nbStadesSurCaseText.setFont(font);
+                                createText(nbStadesSurCaseText, nombreStades, 725, 419);
+                                sf::Text nbPiscinesText; nbPiscinesText.setFont(font);
+                                createText(nbPiscinesText, nbPiscinesAchetes,piscineplusSprite.getPosition().x-19, piscineplusSprite.getPosition().y);
+                                sf::Text nbPiscinesSurCaseText;nbPiscinesSurCaseText.setFont(font);
+                                createText(nbPiscinesSurCaseText, nombrePiscines, piscineplusSprite.getPosition().x + 50, piscineplusSprite.getPosition().y);
+                                sf::Text nbSallesText; nbSallesText.setFont(font);
+                                createText(nbSallesText, nbSallesAchetes, salleplusSprite.getPosition().x-19, salleplusSprite.getPosition().y);
+                                sf::Text nbSallesSurCaseText; nbSallesSurCaseText.setFont(font);
+                                createText(nbSallesSurCaseText, nombreSalles, salleplusSprite.getPosition().x + 50, salleplusSprite.getPosition().y);
+                                affichetexte(popup, nbStadesText, nbPiscinesText, nbPiscinesSurCaseText, nbStadesSurCaseText, nbSallesText, nbSallesSurCaseText);                        
 }
 }
+
+
 
 void createText(sf::Text &text, int value, float posX, float posY) const {
     text.setString(std::to_string(value));
@@ -204,7 +200,6 @@ void createText(sf::Text &text, int value, float posX, float posY) const {
 
 void afficherPopUp(sf::RenderWindow& popup, sf::Sprite& backgroundSprite, sf::Sprite& popupSprite, 
                    const sf::Sprite sprites[], const sf::Sprite& annulerSprite, const sf::Sprite& acheterSprite) const {
-    popup.clear();
     popup.draw(backgroundSprite);
     popup.draw(popupSprite);
 
@@ -213,7 +208,7 @@ void afficherPopUp(sf::RenderWindow& popup, sf::Sprite& backgroundSprite, sf::Sp
     }
     popup.draw(annulerSprite);
     popup.draw(acheterSprite);
-    popup.display();
+
 }
 
 void createPopUpComponents(sf::Texture& backgroundTexture, sf::Sprite& backgroundSprite, sf::Texture& popupTexture, sf::Sprite& popupSprite,
@@ -269,29 +264,13 @@ void achatInstallation(Joueur& J, sf::RenderWindow& window, std::vector<sf::Vect
                             // Création de la fenêtre pop-up avec l'image de fond
                             sf::Texture backgroundTexture, popupTexture, stadeplusTexture, stademoinsTexture, piscineplusTexture, piscinemoinsTexture, salleplusTexture, sallemoinsTexture, annulerTexture, acheterTexture;
                             sf::Sprite backgroundSprite, popupSprite, stadeplusSprite, stademoinsSprite, piscineplusSprite, piscinemoinsSprite, salleplusSprite, sallemoinsSprite, annulerSprite, acheterSprite;
+                            sf :: Text nbStadesText, nbPiscinesText, nbPiscinesSurCaseText, nbStadesSurCaseText, nbSallesText, nbSallesSurCaseText;
                             createPopUpComponents(backgroundTexture, backgroundSprite, popupTexture, popupSprite, stadeplusTexture, stadeplusSprite, stademoinsTexture, stademoinsSprite, piscineplusTexture, piscineplusSprite, piscinemoinsTexture, piscinemoinsSprite, salleplusTexture, salleplusSprite, sallemoinsTexture, sallemoinsSprite, annulerTexture, annulerSprite, acheterTexture, acheterSprite);
                             bool reponse = false;
                             // Boucle principale de la fenêtre pop-up
                             sf::RenderWindow popup(sf::VideoMode(backgroundTexture.getSize().x, backgroundTexture.getSize().y), "Pop-up", sf::Style::Close);
                                 // Effacer et redessiner la fenêtre pop-up avec le fond et le pop-up
-                                popup.clear();
-                                afficherPopUp(popup, backgroundSprite, popupSprite, 
-                                              (const sf::Sprite[]) {stadeplusSprite, stademoinsSprite, piscineplusSprite, piscinemoinsSprite, salleplusSprite, sallemoinsSprite}, 
-                                              annulerSprite, acheterSprite);
                                 // Affichage du nombre de stades achetés, du nombre de piscines achetées et du nombre de salles achetées
-                                sf::Font font; font.loadFromFile("police1.otf");
-                                sf::Text nbStadesText; nbStadesText.setFont(font);
-                                createText(nbStadesText, nbStadesAchetes, 655, 419);
-                                sf::Text nbStadesSurCaseText; nbStadesSurCaseText.setFont(font);
-                                createText(nbStadesSurCaseText, nombreStades, 725, 419);
-                                sf::Text nbPiscinesText; nbPiscinesText.setFont(font);
-                                createText(nbPiscinesText, nbPiscinesAchetes,piscineplusSprite.getPosition().x-19, piscineplusSprite.getPosition().y);
-                                sf::Text nbPiscinesSurCaseText;nbPiscinesSurCaseText.setFont(font);
-                                createText(nbPiscinesSurCaseText, nombrePiscines, piscineplusSprite.getPosition().x + 50, piscineplusSprite.getPosition().y);
-                                sf::Text nbSallesText; nbSallesText.setFont(font);
-                                createText(nbSallesText, nbSallesAchetes, salleplusSprite.getPosition().x-19, salleplusSprite.getPosition().y);
-                                sf::Text nbSallesSurCaseText; nbSallesSurCaseText.setFont(font);
-                                createText(nbSallesSurCaseText, nombreSalles, salleplusSprite.getPosition().x + 50, salleplusSprite.getPosition().y);
                                 // Boucle pour attendre la réponse du joueur
                                 checkachat(J, window, points, nbStadesAchetes, nbPiscinesAchetes, nbSallesAchetes, nombreStadesMax, nombrePiscinesMax, nombreSallesxMax, 
                                 reponse, acheterSprite, annulerSprite, stadeplusSprite, stademoinsSprite, piscineplusSprite, piscinemoinsSprite, salleplusSprite, 

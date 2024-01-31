@@ -1,4 +1,4 @@
-CXX = arch -x86_64 /usr/bin/g++ # g++ 
+CXX = g++ #arch -x86_64 /usr/bin/g++
 CXXFLAGS = -std=c++17 -g
 LIBS = -lsfml-graphics -lsfml-window -lsfml-system -lsfml-audio
 

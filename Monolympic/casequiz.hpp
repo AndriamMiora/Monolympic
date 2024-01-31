@@ -122,23 +122,23 @@ void simulateBotAnswer(sf::RenderWindow& window, const sf::Sprite& sprite, const
 std::string reponse(int nombreAleatoire) const {  // fonction qui retourne la bonne réponse en fonction de la carte quiz tirée
     switch (nombreAleatoire) {
         case 1:
-            return "A";
+            return "B";
         case 2:
             return "B";
         case 3:
             return "C";
         case 4:
-            return "D";
-        case 5:
             return "A";
+        case 5:
+            return "B";
         case 6:
             return "B";
         case 7:
-            return "C";
-        case 8:
-            return "D";
-        case 9:
             return "A";
+        case 8:
+            return "A";
+        case 9:
+            return "C";
         case 10:
             return "B";
     }
