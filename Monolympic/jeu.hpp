@@ -280,7 +280,7 @@ public:
         rollButton.setScale(sf::Vector2f(0.2f, 0.2f));  // Ajustement de la taille
         std::vector<sf::Sprite> diceSprites;
         bool joueur1Turn = true;
-        sf::Clock globalTimer; const sf::Time timeLimit = sf::seconds(700.0f);
+        sf::Clock globalTimer; const sf::Time timeLimit = sf::seconds(600.0f);
         sf::Text timeText; setupTimeText(timeText, stdFont);
         runGameLoop(window, joueur1, joueur2, points, des, rollButton, sprite, diceSprites, joueur1PointsText, joueur2PointsText, playerNameText, tourSprite, timeText, joueur1Turn, globalTimer, timeLimit, playerPion, tableau);
         endGame(window, joueur1, joueur2, tableau);

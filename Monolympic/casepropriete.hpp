@@ -12,16 +12,12 @@ private:
     mutable int nombreStades;
     mutable int nombrePiscines;
     mutable int nombreSalles;
-    int nombreMaxInstallations;
-
-
 public:
     CasePropriete(int _position, int _cout, bool _estAchete) 
         : CasePayante(_position, _cout, _estAchete),
           nombreStades(0),
           nombrePiscines(0),
-          nombreSalles(0),
-          nombreMaxInstallations(10) {} // Initialisation par défaut
+          nombreSalles(0){} // Initialisation par défaut
 
      std::string getPositionTexte() const {
         return "Position de la case : " + std::to_string(getPosition());
@@ -52,44 +48,11 @@ public:
         return nombreSalles;
     }
 
-
-    // Méthode pour obtenir le nombre maximal d'installations
-    int getNombreMaxInstallations() const {
-        return nombreMaxInstallations;
-    }
-
     // Méthode pour mettre à jour l'état de la case
     void setEtat(bool _estAchete) {
         estAchete = _estAchete;
     }
-
-    // Méthode pour mettre à jour le coût de la case
-    void setCout(int _cout, int stades, int piscines, int salles) {
-        cout = _cout + int(0.8 * 15 * stades + 0.5 * 10 * piscines + 0.25 * 5 * salles);
-    }
-
-    // Méthode pour ajouter un stade
-    void ajouterStade() {
-        if (nombreStades < nombreMaxInstallations) {
-            ++nombreStades;
-        }
-    }
-
-    // Méthode pour ajouter une piscine
-    void ajouterPiscine() {
-        if (nombrePiscines < nombreMaxInstallations) {
-            ++nombrePiscines;
-        }
-    }
-
-    // Méthode pour ajouter une salle
-    void ajouterSalle() {
-        if (nombreSalles < nombreMaxInstallations) {
-            ++nombreSalles;
-        }
-    }
-
-    
+  
     // Méthode pour set l'état de la case
     void setEtat(bool _estAchete) const {
         estAchete = _estAchete;
@@ -117,7 +80,8 @@ public:
     }
     
     // Gestion du Loyer à payer : vérifier si la case est achetée mais n'impartient pas au joueur
-  if (estAchete && !appartientAuJoueur) {
+    // if (estAchete && !appartientAuJoueur) {
+  if (estAchete && !appartientAuJoueur){
     // Chargement de l'image de fond
         sf::Texture backgroundTexture;
         if (!backgroundTexture.loadFromFile("assets/bank.png")) {
@@ -174,8 +138,13 @@ public:
             popup.draw(boutonFermerSprite);
                 // mettre à jour le loyer à payer !! 
             //setCout(getCout(), nombreStades, nombrePiscines, nombreSalles);
-            J.setPoints(J.getPoints() - cout);
-
+            int newcout = getCout() + int((0.8 * 15 * getNombreStades()) + (0.5 * 10 * getNombrePiscines())+ (0.25 * 5 * getNombreSalles()));
+            if (J.getPoints()>newcout){
+                J.setPoints(J.getPoints() - newcout);
+            }else {
+                J.setPoints(0);
+            }
+            
             // Affichage du coût à payer
             sf::Font font;
             if (!font.loadFromFile("police1.otf")) {
@@ -194,9 +163,8 @@ public:
         }
     }
 
-
-
     // Acheter des installations sur les propriétés du joueur
+    //if (estAchete && appartientAuJoueur) {
     if (estAchete && appartientAuJoueur) {
         // Vérification si le joueur a assez de points pour acheter un stade
         if (J.getPoints() >= 5) {
@@ -219,8 +187,8 @@ public:
 
                             // Chargement de l'image pour le pop-up (le fichier popupwindow.png contient celui avec les salles)
                             sf::Texture popupTexture;
-                            if (!popupTexture.loadFromFile("assets/affichagesanssalle.png")){
-                                std::cerr << "Erreur lors du chargement de l'image affichagesanssalle.png" << std::endl;
+                            if (!popupTexture.loadFromFile("assets/popupwindow.png")){
+                                std::cerr << "Erreur lors du chargement de l'image popupwindow.png" << std::endl;
                                 return;
                             }
                             sf::Sprite popupSprite(popupTexture);
@@ -267,13 +235,30 @@ public:
                             piscinemoinsSprite.setPosition(624, 442.5);
                             piscinemoinsSprite.setScale(0.5f, 0.5f);
 
-                                // Chargement de l'image "annuler.png"
+                            //Salles 
+                            // Chargement de l'image piscineplus.png
+                            sf::Texture salleplusTexture;
+                            if (!salleplusTexture.loadFromFile("assets/salleplus.png")) {
+                                std::cerr << "Erreur lors du chargement de l'image salleplus.png" << std::endl;
+                            }
+                            sf::Sprite salleplusSprite(salleplusTexture);
+                            salleplusSprite.setPosition(675, 467.5);
+                            salleplusSprite.setScale(0.5f, 0.5f);
+
+                            // Chargement de l'image sallemoins.png
+                            sf::Texture sallemoinsTexture;
+                            if (!sallemoinsTexture.loadFromFile("assets/sallemoins.png")) {
+                                std::cerr << "Erreur lors du chargement de l'image sallemoins.png" << std::endl;
+                            }
+                            sf::Sprite sallemoinsSprite(sallemoinsTexture);
+                            sallemoinsSprite.setPosition(624, 467.5);
+                            sallemoinsSprite.setScale(0.5f, 0.5f);
+                           // Chargement de l'image "annuler.png"
                             sf::Texture annulerTexture;
                             if (!annulerTexture.loadFromFile("assets/annulerpetit.png")) {
                                 std::cerr << "Erreur lors du chargement de la texture pour l'image annulerpetit.png" << std::endl;
                                 return;
                             }
-
                             // Chargement de l'image "acheterpetit.png"
                             sf::Texture acheterTexture;
                             if (!acheterTexture.loadFromFile("assets/acheterpetit.png")) {
@@ -324,8 +309,21 @@ public:
                                                 nbPiscinesAchetee--;
                                             }
                                         }
+                                        if (event.mouseButton.x >= 675 && event.mouseButton.x < 675 + piscineplusTexture.getSize().x &&
+                                            event.mouseButton.y >= 467.5 && event.mouseButton.y < 467.5 + piscineplusTexture.getSize().y) {
+                                            if (nbSallessAchetee < nombreSallesxMax) {
+                                                nbSallessAchetee++;
+                                            }
+                                        }
+                                        // Vérifier le clic sur le bouton piscinemoins.png
+                                        else if (event.mouseButton.x >= 624 && event.mouseButton.x < 624 + piscinemoinsTexture.getSize().x &&
+                                                event.mouseButton.y >= 467.5 && event.mouseButton.y < 467.5 + piscinemoinsTexture.getSize().y) {
+                                            if (nbSallessAchetee > 0) {
+                                                nbSallessAchetee--;
+                                            }
+                                        }
                                         if (acheterSprite.getGlobalBounds().contains(event.mouseButton.x, event.mouseButton.y)) {
-                                            J.setPoints(J.getPoints() - (nbStadesAchetee * 15 + 10 * nbPiscinesAchetee));
+                                            J.setPoints(J.getPoints() - (nbStadesAchetee * 15 + 10 * nbPiscinesAchetee+ 5*nbSallessAchetee));
                                             // Ferme la fenêtre pop-up
                                             popup.close();
                                             reponse = true;
@@ -333,7 +331,7 @@ public:
                                             // Met à jour le nombre de stades
                                             nombreStades += nbStadesAchetee;
                                             nombrePiscines += nbPiscinesAchetee;
-
+                                            nombreSalles += nbSallessAchetee;
                                         }
                                         // Vérifie le clic sur le bouton "annuler.png"
                                         else if (annulerSprite.getGlobalBounds().contains(event.mouseButton.x, event.mouseButton.y)) {
@@ -350,12 +348,13 @@ public:
                                 popup.draw(popupSprite); // Dessiner le pop-up par-dessus
                                 popup.draw(stadeplusSprite);
                                 popup.draw(stademoinsSprite);
-                                popup.draw(piscineplusSprite); // Dessiner le bouton d'ajout de piscine
-                                popup.draw(piscinemoinsSprite); // Dessiner le bouton de suppression de piscine
+                                popup.draw(piscineplusSprite);
+                                popup.draw(piscinemoinsSprite); 
+                                popup.draw(salleplusSprite); 
+                                popup.draw(sallemoinsSprite);
                                 popup.draw(annulerSprite);
                                 popup.draw(acheterSprite);
-                                
-
+                    
                                 // Affichage du nombre de stades achetés
                                 sf::Font font;
                                 if (!font.loadFromFile("police1.otf")) {
@@ -393,10 +392,28 @@ public:
                                 nbPiscinesSurCaseText.setFillColor(sf::Color::Black);
                                 nbPiscinesSurCaseText.setPosition(piscineplusSprite.getPosition().x + 50, piscineplusSprite.getPosition().y); // Position ajustée
                                 
+        
+                                sf::Text nbSallesText;
+                                nbSallesText.setFont(font);
+                                nbSallesText.setString(std::to_string(nombreSalles));
+                                nbSallesText.setCharacterSize(12);
+                                nbSallesText.setFillColor(sf::Color::Black);
+                                nbSallesText.setPosition(salleplusSprite.getPosition().x-19, salleplusSprite.getPosition().y); // Position ajustée
+
+                                sf::Text nbSallesSurCaseText;
+                                nbSallesSurCaseText.setFont(font);
+                                nbSallesSurCaseText.setString(std::to_string(nbSallessAchetee));
+                                nbSallesSurCaseText.setCharacterSize(12);
+                                nbSallesSurCaseText.setFillColor(sf::Color::Black);
+                                nbSallesSurCaseText.setPosition(salleplusSprite.getPosition().x + 50, salleplusSprite.getPosition().y); // Position ajustée
+
+                            
                                 popup.draw(nbStadesText);
                                 popup.draw(nbPiscinesText);
                                 popup.draw(nbPiscinesSurCaseText);
                                 popup.draw(nbStadesSurCaseText);
+                                popup.draw(nbSallesText);
+                                popup.draw(nbSallesSurCaseText);
                                 popup.display();
                             }
                         }

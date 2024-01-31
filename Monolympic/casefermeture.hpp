@@ -31,7 +31,7 @@ public:
             }
             else {
                 // bloquer le joueur pour 2 tours
-                J.setFermerVille(true);
+                J.setFermerVille(false); // test
                 if (!texture.loadFromFile("assets/fermeture2.jpg")) {
                 std::cerr << "Erreur lors du chargement de l'image de la case quiz" << std::endl;
             }
@@ -73,7 +73,7 @@ public:
 
         // Gérer le clic sur le bouton "continuer" si on est un bot
         if (J.getBot() == true) {
-            sf::sleep(sf::milliseconds(1000));  // Vous pouvez ajuster le délai si nécessaire               
+            sf::sleep(sf::milliseconds(1000));  // Vous pouvez ajuster le délai si nécessaire       
             }
         else {
              // Boucle d'affichage
