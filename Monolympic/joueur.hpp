@@ -16,13 +16,13 @@ private:
     // vecteur avec la liste des positions des cases achetées par le joueur
     std::vector<int>casesAchetees;
 
-    mutable bool acarteouvertureville = false;
+    mutable bool acarteouvertureville = false; // booléen pour savoir si le joueur a la carte ouverture ville
 
-    mutable bool acartedispensequiz = false;
+    mutable bool acartedispensequiz = false; // booléen pour savoir si le joueur a la carte dispense quiz
 
-    mutable bool fermerVille = false;
+    mutable bool fermerVille = false; // booléen pour savoir si la ville est fermée
 
-    mutable bool isBot = false;
+    mutable bool isBot = false; // booléen pour savoir si le joueur est un bot
 
 public:
 
@@ -41,6 +41,7 @@ public:
     bool getBot() const {
         return isBot;
     }
+    // Setter pour le bot
     void setBot(bool _bot) {
         isBot = _bot;
     }
@@ -63,11 +64,12 @@ public:
         return acartedispensequiz;
     }
 
-
+    // Getter pour la fermeture de la ville
     bool getFermerVille() const {
         return fermerVille;
     }
 
+    // Setter pour la fermeture de la ville
     void setFermerVille(bool fermerVille) {
         this->fermerVille = fermerVille;
     }

@@ -21,16 +21,16 @@
 #include <vector>
 
 
-// gère les affichages 
+// gère les affichages de l'écran de jeu
 class Affichage {
 public : 
-sf::Sprite loadSprite(const std::string& imagePath) {
+sf::Sprite loadSprite(const std::string& imagePath) { // charge une image et la transforme en sprite
     sf::Texture texture;
     texture.loadFromFile(imagePath);
     return sf::Sprite(texture);
 }
 
-sf::Sprite createsprite(sf::RenderWindow& window, const std::string& imagePath) {
+sf::Sprite createsprite(sf::RenderWindow& window, const std::string& imagePath) { // charge une image et la transforme en sprite
     sf::Texture tourTexture;
     tourTexture.loadFromFile(imagePath);
     sf::Sprite tourSprite;
@@ -46,15 +46,16 @@ sf::RectangleShape createSelectionWindow(sf::RenderWindow& window, std::string& 
 std::string selectPlayerPion(sf::RenderWindow& window);
 
 
-sf::Text createAndInitializeTimeText (sf :: Font font) {
+sf::Text createAndInitializeTimeText (sf :: Font font) {  // crée et initialise le texte du temps
     sf::Text timeText;
     timeText.setFont(font);
     timeText.setCharacterSize(24);
     timeText.setFillColor(sf::Color::White);
-    timeText.setPosition(10.f, 10.f);  // Ajustez la position selon vos besoins
+    timeText.setPosition(10.f, 10.f);  
     return timeText;
 }
 
+// Fonction auxiliaire pour initialiser un texte
 sf::Text createAndInitializeText(const sf::Font& font, int characterSize, const sf::Color& fillColor, const sf::Vector2f& position, const std::string& text) {
     sf::Text textObject;
     textObject.setFont(font);
@@ -62,7 +63,6 @@ sf::Text createAndInitializeText(const sf::Font& font, int characterSize, const 
     textObject.setFillColor(fillColor);
     textObject.setPosition(position);
     textObject.setString(text);
-
     return textObject;
 }
 // Fonction auxiliaire pour initialiser un texte
@@ -89,7 +89,7 @@ void handleIntroEvents(sf::RenderWindow& window, bool& gameStarted, const sf::Re
         }
     }
 }
-// Fonction auxiliaire pour gérer les événements de la fenêtre de sélection
+// Fonction auxiliaire pour gérer les événements de la fenêtre d'entrée du nom
 void handleSelectionEvents(sf::RenderWindow& window, bool& nameEntered, std::string& playerName, sf::Text& nameInputText, const sf::RectangleShape& validatebutton) {
     sf::Event evt;
     while (window.pollEvent(evt)) {
@@ -187,6 +187,8 @@ void drawPionSelectionElements(sf::RenderWindow& window, const sf::RectangleShap
     window.draw(pion2);
     window.display();
 }
+
+// Fonction auxiliaire pour dessiner les éléments l'affichage du gagnant
 void Drawgagner(sf::RenderWindow& window, sf::Sprite& gagner) {
     gagner.setOrigin(gagner.getTexture()->getSize().x / 2.0f, gagner.getTexture()->getSize().y / 2.0f);
     gagner.setPosition(window.getSize().x / 2.0f, window.getSize().y / 2.0f);

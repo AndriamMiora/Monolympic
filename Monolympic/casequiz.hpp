@@ -11,7 +11,8 @@ class CaseQuiz : public Case {
 public:
     CaseQuiz(int _position) : Case(_position) {}
 
-    void initializeSprite(sf::Sprite& sprite, const sf::Vector2f& position, const sf::Vector2f& origin, const sf::Vector2f& scale) const  {
+    void initializeSprite(sf::Sprite& sprite, const sf::Vector2f& position, const sf::Vector2f& origin, const sf::Vector2f& scale) const  { 
+    // fonction pour initialiser les sprites
     sprite.setOrigin(origin.x, origin.y);
     sprite.setPosition(position);
     sprite.setScale(scale.x, scale.y);
@@ -19,7 +20,7 @@ public:
 
 
     void drawsprite(sf::RenderWindow& window, sf::Sprite& spriteA, sf::Sprite& spriteB, sf::Sprite& spriteC, sf::Sprite& spriteD, sf::Sprite& sprite) const {
-           // Dessiner les sprites
+        // Dessiner les sprites
         window.draw(sprite);
         window.draw(spriteA);
         window.draw(spriteB);
@@ -30,11 +31,11 @@ public:
     }
 
     void action(Joueur& J, sf::RenderWindow& window,std::vector<sf::Vector2f> points) const override{
-        std::cout << "Vous êtes sur une case Quiz (position " << getPosition() << ")." << std::endl;
+        //std::cout << "Vous êtes sur une case Quiz (position " << getPosition() << ")." << std::endl;
         //génère un nombre aléatoire entre 1 et 10
         int nombreAleatoire = rand() % 10 + 1;
         // load file 
-        if (J.getCarteDispenseQuiz()) {
+        if (J.getCarteDispenseQuiz()) { // si le joueur a une carte chance dispense quiz il l'utiliser afin de ne pas faire le quiz
             sf :: Texture texture;
             if (!texture.loadFromFile("assets/dispensequiz.jpg")) {
                 std::cerr << "Erreur lors du chargement de l'image de la case quiz" << std::endl;
@@ -51,7 +52,7 @@ public:
             J.setCarteDispenseQuiz(false);
             return;
         }
-        actionCaseQuiz(nombreAleatoire, J, window, points);
+        actionCaseQuiz(nombreAleatoire, J, window, points); // réaliser le quiz correspondant au nombre aléatoire généré = carte quiz qui a été tirée
     }
 
 // Fonction pour gérer la réponse
@@ -65,10 +66,10 @@ void handleResponse(sf::RenderWindow& window, const sf::Sprite& sprite, Joueur& 
         animateMauvaiseReponse(window, J);
         J.setPoints(std::max(0, J.getPoints() - 20));
     }
-    sf::sleep(sf::milliseconds(500));  // Ajustez le délai si nécessaire
+    sf::sleep(sf::milliseconds(500));  
 }
 
-    // Fonction pour gérer le clic de la souris
+    // Fonction pour gérer le clic de la souris sur les réponses
 bool handleMouseClick(sf::RenderWindow& window, float mouseX, float mouseY, const sf::Sprite& spriteA,
     const sf::Sprite& spriteB, const sf::Sprite& spriteC, const sf::Sprite& spriteD,Joueur& J, std::string bonneReponse) const {
     if (spriteA.getGlobalBounds().contains(mouseX, mouseY)) {
@@ -118,7 +119,7 @@ void simulateBotAnswer(sf::RenderWindow& window, const sf::Sprite& sprite, const
     sf::sleep(sf::milliseconds(500));  // Ajustez le délai si nécessaire
 }
 
-std::string reponse(int nombreAleatoire) const {
+std::string reponse(int nombreAleatoire) const {  // fonction qui retourne la bonne réponse en fonction de la carte quiz tirée
     switch (nombreAleatoire) {
         case 1:
             return "A";
@@ -161,7 +162,7 @@ void initializeSprites(sf::RenderWindow& window, sf::Sprite& spriteA, sf::Sprite
 }
 
 
-    void actionCaseQuiz(int nombreAleatoire, Joueur& J, sf::RenderWindow& window, std::vector<sf::Vector2f> points) const {
+    void actionCaseQuiz(int nombreAleatoire, Joueur& J, sf::RenderWindow& window, std::vector<sf::Vector2f> points) const { // fonction qui réalise le quiz
         sf::Texture textureA, textureB, textureC, textureD, texture;
         textureA.loadFromFile("assets/Quiz/A.png"); textureB.loadFromFile("assets/Quiz/B.png");
         textureC.loadFromFile("assets/Quiz/C.png"); textureD.loadFromFile("assets/Quiz/D.png");
@@ -228,6 +229,7 @@ void animateBonneReponse(sf::RenderWindow& window, Joueur& J) const {
         window.display();}
 }
 
+// Fonction qui anime la mauvaise réponse
 void animateMauvaiseReponse(sf::RenderWindow& window, Joueur& J) const {
     // Charger les textures "mauvaiseReponse.jpg" et "continuer1.png"
     sf::Texture mauvaiseReponseTexture;

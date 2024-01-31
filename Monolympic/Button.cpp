@@ -2,11 +2,9 @@
 #include "Button.hpp"
 #include <iostream>  // Include for debugging purposes
 
-Button::Button(const std::string& texturePath) : clicked(false) {
+Button::Button(const std::string& texturePath) : clicked(false) { 
     if (!texture.loadFromFile(texturePath)) {
-        // Handle image loading error
         std::cerr << "Erreur lors du chargement de l'image du bouton." << std::endl;
-        // You can add more error-handling actions if needed
     }
 
     sprite.setTexture(texture);
@@ -39,7 +37,7 @@ void Button::handleEvent(const sf::Event& event, sf::RenderWindow& window) {
 
         if (bounds.contains(static_cast<float>(mousePosition.x), static_cast<float>(mousePosition.y))) {
             clicked = true;
-            std::cout << "Button Clicked!" << std::endl;  // Debugging message
+            // std::cout << "Button Clicked!" << std::endl;  
         }
     }
 }

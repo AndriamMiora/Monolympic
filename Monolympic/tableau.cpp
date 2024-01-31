@@ -3,7 +3,7 @@
 #include <vector>
 #include "tableau.hpp"
 
-// fonction de get points
+// fonction de get points pour recuperer les points des cases
 std::vector<sf::Vector2f> Tableau::getPoints() {
    auto [positions, caseNormaleSize, caseNormaleRotateSize, caseDepartSize, positionDepartDroite, positionDepartGauche, 
   positionDepartGaucheTop,positionDepartDroiteTop] = initializePositions();

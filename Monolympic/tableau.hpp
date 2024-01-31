@@ -23,56 +23,39 @@
 
 class Tableau {
     private:
-    std::vector<Case*> cases; // Utilisez un vecteur de pointeurs de la classe de base
+    std::vector<Case*> cases; // vecteur de cases pour le plateau de jeu 
     std::list<Joueur*> joueurs; // Utilisez une liste pour les joueurs
 public:
-    Tableau() {
-        ajouterCaseDepart(0, 0);
-        addPropertyCase(1 , 20, false);
-        addQuizCase(2);
-        addPropertyCase(3 , 20, false);
-        addTaxCase(4 , 10);
-        addNormalCase(5);
-        addPropertyCase(6, 20, false);
-        addChanceCase(7);
-        addPropertyCase(8 , 20, false);
-        addPropertyCase(9 , 20, false);
-        addNormalCase(10);
-        addPropertyCase(11 , 20, false);
-        addServiceCase(12, "Électricité");
-        addPropertyCase(13 , 20, false);
-        addPropertyCase(14 , 20, false);
-        addChanceCase(15);
-        addPropertyCase(16 , 20, false);
-        addQuizCase(17);
-        addPropertyCase(18 , 20, false);
-        addPropertyCase(19 , 20, false);
-        addNormalCase(20);
-        addPropertyCase(21 , 20, false);
-        addPropertyCase(22 , 20, false);
-        addChanceCase(23);
-        addPropertyCase(24 , 20, false);
-        addPropertyCase(25 , 20, false);
-        addTaxCase(26 , 10);
-        addPropertyCase(27 , 20, false);
-        addQuizCase(28);
-        addPropertyCase(29 , 20, false);
-        addCloseCityCase(30);
-        addPropertyCase(31 , 20, false);
-        addPropertyCase(32 , 20, false);
-        addQuizCase(33);
-        addPropertyCase(34 , 20, false);
-        addServiceCase(35, "Main d'œuvre");
-        addChanceCase(36);
-        addPropertyCase(37 , 20, false);
-        addServiceCase(38, "Eau");
-        addPropertyCase(39 , 20, false);
+    Tableau() { // Constructeur par défaut pour initialiser le tableau en ajoutant des cases de chaque type au vecteur de cases 
+        ajouterCaseDepart(0, 0); addPropertyCase(1 , 10, false);
+        addQuizCase(2); addPropertyCase(3 , 10, false);
+        addTaxCase(4 , 10); addNormalCase(5);
+        addPropertyCase(6, 7, false); addChanceCase(7);
+        addPropertyCase(8 , 7, false); addPropertyCase(9 , 4, false);
+        addNormalCase(10); addPropertyCase(11 , 4, false);
+        addServiceCase(12, "Électricité"); addPropertyCase(13 , 4, false);
+        addPropertyCase(14 , 7, false); addChanceCase(15);
+        addPropertyCase(16 , 7, false); addQuizCase(17);
+        addPropertyCase(18 , 7, false); addPropertyCase(19 , 13, false);
+        addNormalCase(20); addPropertyCase(21 , 13, false);
+        addPropertyCase(22 , 13, false); addChanceCase(23);
+        addPropertyCase(24 , 13, false); addPropertyCase(25 , 13, false);
+        addTaxCase(26 , 10); addPropertyCase(27 , 13, false);
+        addQuizCase(28); addPropertyCase(29 , 10, false);
+        addCloseCityCase(30); addPropertyCase(31 , 10, false);
+        addPropertyCase(32 , 10, false); addQuizCase(33);
+        addPropertyCase(34 , 4, false); addServiceCase(35, "Main d'œuvre");
+        addChanceCase(36); addPropertyCase(37 , 4, false);
+        addServiceCase(38, "Eau"); addPropertyCase(39 , 10, false);
     }
 
-    std::vector<sf::Vector2f> getPoints();
+    std::vector<sf::Vector2f> getPoints(); // Méthode pour obtenir le vecteur de points pour le placement des cases (en pixels)
 
     std::pair<std::vector<sf::Sprite>, int>initializeDiceSprites(Des& des, sf::Vector2f buttonPosition, int& position, std::vector<sf::Vector2f> points, Joueur* joueur, sf::RenderWindow& window);
-    // Méthodes pour ajouter des instances spécifiques de cases en fonction de leur type
+    // initialise les sprites des dés (selon les valeurs des dés) et renvoie un vecteur de sprites et la somme des dés
+
+    // fonctions d'ajout de cases au vecteur de cases
+
    void addChanceCase(int position) {
         cases.push_back(new CaseChance(position));
     }
@@ -155,6 +138,8 @@ public:
         joueur->setPion(pion);
         joueur->setPoints(points);
     }
+
+// fonctions pour récuper les positions des cases
 
 sf::Vector2f placement(std::vector<sf::Vector2f>& positions, sf::Vector2f& positionDepartGauche, sf::Vector2f& positionDepartDroite, sf::Vector2i& caseNormaleSize, sf::Vector2i& caseNormaleRotateSize, sf::Vector2i& caseDepartSize, float& offsetY, float& offsetYTop, float& basImage, float& hautImage, sf::Texture& texture, sf::Sprite& sprite, sf::RenderWindow& window) {
     positions.push_back(positionDepartDroite);

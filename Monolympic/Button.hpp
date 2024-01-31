@@ -5,19 +5,19 @@
 
 class Button {
 public:
-    void setPosition(const sf::Vector2f& position);
-    void handleEvent(const sf::Event& event, sf::RenderWindow& window);  // Pass sf::RenderWindow as a parameter
-    bool isClicked() const;
-    void draw(sf::RenderWindow& window);
-    void setScale(const sf::Vector2f& scale);
-    sf::Vector2f getSize() const;
-    sf::Vector2f getPosition() const;
-    void resetClicked();
+    void setPosition(const sf::Vector2f& position); // Pour mettre à jour la position du bouton
+    void handleEvent(const sf::Event& event, sf::RenderWindow& window);  
+    bool isClicked() const; // Pour savoir si le bouton a été cliqué
+    void draw(sf::RenderWindow& window); // Pour dessiner le bouton
+    void setScale(const sf::Vector2f& scale); // Pour mettre à jour l'échelle du bouton
+    sf::Vector2f getSize() const; // Pour obtenir la taille du bouton
+    sf::Vector2f getPosition() const; // Pour obtenir la position du bouton
+    void resetClicked(); // Pour réinitialiser le bouton
   
 
     // Récupérer les dimensions de la fenêtre
 
-    std::pair<float, float> createRollButton(const std::string& texturePath, const sf::RenderWindow& window) {
+    std::pair<float, float> createRollButton(const std::string& texturePath, const sf::RenderWindow& window) { // Pour créer le bouton de lancer de dé
 
     Button rollButton(texturePath);
    
@@ -47,8 +47,8 @@ public:
     return std::make_pair(xPosition, yPosition);
 }
 
-    Button(const std::string& imagePath);
-    Button(const std::string& imagePath, const sf::Vector2f& position);
+    Button(const std::string& imagePath); // Constructeur
+    Button(const std::string& imagePath, const sf::Vector2f& position); // Constructeur
 
 private:
     sf::Texture texture;

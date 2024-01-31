@@ -1,13 +1,14 @@
-CXX = g++
-CXXFLAGS = -std=c++11
+CXX = arch -x86_64 /usr/bin/g++ # g++ 
+CXXFLAGS = -std=c++17 -g
 LIBS = -lsfml-graphics -lsfml-window -lsfml-system -lsfml-audio
 
 
-all: mon_programme
+all: monolympic
 
-mon_programme: *.cpp
-	$(CXX) $(CXXFLAGS) -o mon_programme ./*.cpp $(LIBS)
-	./mon_programme
+monolympic: *.cpp
+	$(CXX) $(CXXFLAGS) -o monolympic ./*.cpp $(LIBS)
+	./monolympic
+
 
 clean:
-	rm -f mon_programme
+	rm -f monolympic

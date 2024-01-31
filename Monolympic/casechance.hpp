@@ -13,10 +13,10 @@ public:
     CaseChance(int _position) : Case(_position) {}
 
     void action(Joueur& J, sf::RenderWindow& window,std::vector<sf::Vector2f> points) const override{
-        std::cout << "Vous êtes sur une case Chance (position " << getPosition() << ")." << std::endl;
-        //génère un nombre aléatoire entre 1 et 10
+        //std::cout << "Vous êtes sur une case Chance (position " << getPosition() << ")." << std::endl;
+        //génère un nombre aléatoire entre 1 et 10 pour choisir la carte chance
         int nombreAleatoire = rand() % 10 + 1;
-        // load file 
+        // affiche la carte chance correspondante
         std::string filename = "assets/chance/" + std::to_string(nombreAleatoire) + ".jpg";
         sf::Texture texture;
         texture.loadFromFile(filename);
@@ -28,9 +28,11 @@ public:
         window.draw(sprite);
         window.display();
         sf::sleep(sf::seconds(1));
+        // effectue l'action correspondante
         actionCaseChance(nombreAleatoire, J, window, points);
     }
 
+    // Méthode pour effectuer l'action selon le nombre aléatoire généré = carte chance qui a été tirée
     void actionCaseChance(int nombreAleatoire, Joueur& J, sf::RenderWindow& window, const std::vector<sf::Vector2f>& points) const {
     switch (nombreAleatoire) {
         case 1:  J.setCarteOuvertureVille(true); break;

@@ -17,6 +17,6 @@
 
 int main(){
     
-    Jeu jeu;
-    jeu.beginGame();
+    Jeu jeu; // on crée un objet jeu
+    jeu.beginGame(); // on lance le jeu
 }

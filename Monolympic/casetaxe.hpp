@@ -13,16 +13,15 @@ protected:
     int montant;
 
 public:
-    CaseTaxe(int _montant, int position) : Case(position), montant(_montant) {}
+    CaseTaxe(int _montant, int position) : Case(position), montant(_montant) {} // constructeur avec paramètres
 
-    CaseTaxe() : Case(4), montant(100) {}
-
-    // plusieurs cases taxe avec des positions différentes
+    CaseTaxe() : Case(4), montant(100) {} // Initialisation par défaut
     
-     void action(Joueur& J, sf::RenderWindow& window, std::vector<sf::Vector2f> points) const override{
-        std::cout << "Vous êtes sur une case de taxe. Vous devez payer " << montant << " médailles olympiques." << std::endl;
+     void action(Joueur& J, sf::RenderWindow& window, std::vector<sf::Vector2f> points) const override{ // méthode pour l'action de la case
+        //std::cout << "Vous êtes sur une case de taxe. Vous devez payer " << montant << " médailles olympiques." << std::endl;
         if (J.getPoints() < montant) {
-            std::cout << "Vous n'avez pas assez de médailles pour payer la taxe. Vous êtes éliminé." << std::endl;
+            //std::cout << "Vous n'avez pas assez de médailles pour payer la taxe" << std::endl;
+            J.setPoints(0);
         } else {
             J.setPoints(J.getPoints() - montant);
         }

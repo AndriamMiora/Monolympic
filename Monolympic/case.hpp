@@ -23,6 +23,13 @@ public:
     virtual int getCout() const {
         return 0;
     }
+
+    // fonction virtuelle pas pure actionBot
+    virtual void actionbot(Joueur& J, sf::RenderWindow& window,std::vector<sf::Vector2f> points, int number1 , int number2 ) const {
+        return;
+    }
+    
+
  
     // Getter pour les coordonnées
     int getPosition() const {

@@ -1,5 +1,5 @@
-CC=g++
-CCFLAGS= -Wall -std=c++11 -g
+CC= arch -x86_64 /usr/bin/g++ # g++
+CCFLAGS= -Wall -std=c++17 -g
 SRC= $(wildcard ../*.cc)
 OBJ= $(SRC:.cc=.o)
 TST= $(wildcard  *.cc)

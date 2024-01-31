@@ -7,7 +7,7 @@
 #include <string>
 #include "joueur.hpp"
 
-// Classe dérivée pour les cases chance
+// Classe dérivée pour les cases payantes qui sont les cases propriétés et les cases service public
 class CasePayante : public Case {
 protected:
     int cout;
@@ -16,6 +16,6 @@ public:
     CasePayante(int _position, int _cout, bool _estAchete)
         : Case(_position),
           cout(_cout),
-          estAchete(_estAchete) {} // Initialisation par défaut
+          estAchete(_estAchete) {} 
     
 };

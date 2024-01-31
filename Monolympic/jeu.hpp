@@ -198,19 +198,31 @@ public:
         sf::sleep(sf::seconds(5));
     }
 
-    int comptetour(Joueur* joueur, int tour) {
-        int tourne = tour;
-        if (joueur->getFermerVille() == true) {
-                        if (tourne== 2){
-                            joueur->setFermerVille(false);
-                            tourne= 0;
-                        }
-                        else {
-                            tour++;
-                        }
-                    }
-        return tourne; 
+    int comptetour(Joueur* joueur, int tour, bool& joueur1Turn) {
+    int tourne = tour;
+    if (joueur->getFermerVille()) { // Utilise directement la valeur de retour de getFermerVille plutôt que == true
+        if (tourne == 2) {
+            joueur->setFermerVille(false);
+            tourne = 0;
+            if (joueur->getBot()) { // Utilise directement la valeur de retour de getBot plutôt que == true
+                // mettre à jour joueur1Turn
+                joueur1Turn = false;
+            } else {
+                joueur1Turn = true;
+            }
+        } else {
+            tourne += 1;
+            if (joueur->getBot()) {
+                joueur1Turn = true;
+            } else {
+                joueur1Turn = false;
+            }
+        }
     }
+
+    return tourne;
+}
+
 
     void runGameLoop(sf::RenderWindow& window, Joueur* joueur1, Joueur* joueur2, std::vector<sf::Vector2f>& points, Des& des, Button& rollButton, sf::Sprite& sprite, std::vector<sf::Sprite>& diceSprites, sf::Text& joueur1PointsText, sf::Text& joueur2PointsText, sf::Text& playerNameText, sf::Sprite& tourSprite, sf::Text& timeText, bool& joueur1Turn, sf::Clock& globalTimer, const sf::Time& timeLimit, const std::string& playerPion, Tableau& tableau) {
         int position1 = 0, position2 = 0;
@@ -220,7 +232,7 @@ public:
             joueur1PointsText.setString(std::to_string(joueur1->getPoints()));
             joueur2PointsText.setString(std::to_string(joueur2->getPoints()));
             while (window.pollEvent(event)) {
-                tourjoueur = comptetour(joueur1, tourjoueur); tourbot = comptetour(joueur2, tourbot);
+                tourjoueur = comptetour(joueur1, tourjoueur, joueur1Turn); tourbot = comptetour(joueur2, tourbot, joueur1Turn);
                 if (event.type == sf::Event::Closed) {
                     window.close();
                 }
